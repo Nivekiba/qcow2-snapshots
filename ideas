@@ -1,0 +1,29 @@
+1-Isolation du cache L1 et L2 de chaque VM, ou bien garantir une sorte de fairness. Les activités d'une VM ne doivent pas nuire aux autres.
+
+2-Automatic sizing du cache L2, ainsi que de la taille du cluster: dépend de la workload.
+
+3-Utiliser la nvram pour le stockage de L1 et L2.
+
+4-Allocation du cache qui prend en compte l'architecture NUMA
+
+5-Block commit ou Block streaming: quand décider? voir https://wiki.qemu.org/Features/Snapshots: Limitations of Block Commit
+
+---------------------------De la réunion du 23 Septembre 2020
+Motivation du travail actuel
+Pourquoi les longues chaines:
+-le client peut vouloir garder tous ces snapshots et dans ce cas la chaine doit rester longue OU on recree un disque entier potentiellment pour chaque snapshot et la c'est super couteux en espace disque
+-Le streaming n'est pas toujours possible:
+*s'il y a un snapshot faut arrêter
+*il faut que la VM soit arrêté
+*il ne doit pas avoir de sous branches dans une branche
+
+Pour résoudre ce travail, deux alternatives:
+-Redesigner le stockage, formats, cache pour être scalable
+-Proposer un nouveau modèle de streaming pour être capable de bypasser les contraintes ci-dessus
+
+Pour l'instant nous explorons la 1ere alternative avec Théo.
+
+
+
+Une autre idée: Non Uniform Block Access (NUBA) à cause du fait que les blocks d'un même disque se retrouve sur plusieurs serveurs de stockage. Ces serveurs n'expérimentent pas la même saturation.
+

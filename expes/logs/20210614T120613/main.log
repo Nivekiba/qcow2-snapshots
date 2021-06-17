@@ -1,0 +1,5 @@
+[2021-06-14 12:06:13.742] [main] [info] update#setState idle
+[2021-06-14 12:06:43.745] [main] [info] update#setState checking for updates
+[2021-06-14 12:06:43.785] [main] [info] update#setState available for download
+[2021-06-14 12:07:13.207] [main] [error] [storage state.vscdb] prepare(): Error: SQLITE_READONLY_DBMOVED: attempt to write a readonly database (INSERT INTO ItemTable VALUES (?,?),(?,?)). Details: Keys: __$__targetStorageMarker, extensionsAssistant/recommendations Length: 1553
+[2021-06-14 12:07:32.935] [main] [error] Error: ENOENT: no such file or directory, unlink '/home/nivek/Workspace/qcow2-snapshots/expes/User/globalStorage/state.vscdb'

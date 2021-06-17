@@ -1,0 +1,29 @@
+#!/usr/bin/expect -f
+
+set qemu_dir    [lindex $argv 0]
+set filename    [lindex $argv 1]
+set resultfile  [lindex $argv 2]
+
+set timeout -1
+
+spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 -serial stdio --accel kvm -m 4G -drive file=$filename,format=qcow2,l2-cache-size=2M
+
+set before [clock milliseconds]
+
+expect "login: "
+
+set after [clock milliseconds]
+
+set time [expr $after - $before]
+
+set file [open "$resultfile" a]
+puts $file $time
+close $file
+
+send "root\n"
+
+expect "Password: "
+send "a\n"
+
+expect "# "
+send "shutdown -h now\n"

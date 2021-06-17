@@ -1,0 +1,1 @@
+sudo ./wss.pl `ps -A | grep qemu | awk '{print $1}'` 1

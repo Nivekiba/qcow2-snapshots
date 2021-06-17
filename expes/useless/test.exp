@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+
+set filename [lindex $argv 0]
+
+set timeout -1
+
+spawn ./qemu-4.2/x86_64-softmmu/qemu-system-x86_64 -nographic --accel kvm -smp 4 -m 4G -drive file=$filename,format=qcow2
+
+expect "login: "
+send "root\n"
+
+expect "Password: "
+send "a\n"
+
+expect "# "
+send "echo 'dfdf' >> fichier_$filename\n"
+
+expect "# "
+send "sync;\n"
+
+expect "# "
+send "shutdown now\n"

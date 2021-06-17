@@ -1,0 +1,21 @@
+
+base vanilla
+
+Watching PID 171493 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.054      4156.99    4132.52      29.48
+
+1 vanilla
+
+Watching PID 171547 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.044      4139.24    4116.65      25.64
+
+100 vanilla
+
+Watching PID 171633 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.017       631.17     606.12       7.10
+
+200 vanilla
+

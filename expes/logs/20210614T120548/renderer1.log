@@ -1,0 +1,1 @@
+[2021-06-14 12:05:49.306] [renderer1] [error] [File Watcher (node.js)] Error: ENOENT: no such file or directory, stat '/home/nivek/Workspace/qcow2-snapshots/expes/.vscode'

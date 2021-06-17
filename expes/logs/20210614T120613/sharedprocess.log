@@ -1,0 +1,3 @@
+[2021-06-14 12:06:16.931] [sharedprocess] [info] main {"machineId":"a6ad4c0fb63d98ebc20d60e86519dafbee24474c8cc4952d3ae6ea5e8856b010","windowId":2}
+[2021-06-14 12:06:16.988] [sharedprocess] [error] [File Watcher (node.js)] Error: ENOENT: no such file or directory, stat '/home/nivek/Workspace/qcow2-snapshots/expes/User/snippets'
+[2021-06-14 12:06:56.946] [sharedprocess] [info] Starting to clean up unused language packs.

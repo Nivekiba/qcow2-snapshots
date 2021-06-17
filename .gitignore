@@ -1,0 +1,15 @@
+*massif*
+**/.vscode
+tmpfs
+**/snapshot-[0-9]*
+qemu-pierre
+results_bw.log
+result.stddev
+qemu-events.log
+host.log
+disk
+**/build
+FlameGraph
+**/stats_events_vanilla.csv
+**/stats_events.csv
+/expes/diff

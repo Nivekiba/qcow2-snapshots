@@ -1,0 +1,55 @@
+Titre : Étude de Scalabilité du Stockage Virtuel à Base de Chaînes QCOW2 sous
+        QEMU/KVM
+
+QCOW2 est un format utilisé pour stocker des disques de machines virtuelles
+[1]. Ce format est supporté par tous les principaux hyperviseurs. QCOW2 est
+très populaire grâce sa versatilité : en effet il supporte de nombreuses
+fonctionnalités, en particulier les snapshots [2], c'est à dire la sauvegarde
+du contenu du disque (son état) à un moment donné, pour pouvoir éventuellement
+le restaurer par la suite.
+
+Plus précisément, QCOW2 supporte les snapshots 'live'. Il s'agit de snapshots
+réalisées alors que la machine virtuelle est en cours d'exécution, en
+minimisant l'impact sur ses performances d'entrées/sorties. Dans cet objectif,
+les snapshots sont réalisées de manière incrémentale : prendre une snapshot
+consiste à créer pour le disque virtuel une nouvelle couche sur laquelle seront
+dirigées toutes les futures opérations d'écriture réalisées par la machine
+virtuelle. Les opérations de lecture seront quant à elles dirigées vers la
+nouvelle ou l'ancienne couche selon l'emplacement de la dernière version des
+données lues.
+
+Dans ce contexte, le disque virtuel utilisé par une machine virtuelle est donc
+constitué d'une série ordonnée de couches, chacune créée a chaque snapshot au
+dessus de la précédente. En production, lorsque la machine virtuelle s'exécute
+depuis longtemps et que des snapshots sont prises à intervalles réguliers, la
+taille de la chaîne peut être relativement importante, comportant des centaines
+voir des milliers de couches. Le code gérant le stockage au sein de
+l'hyperviseur populaire QEMU/KVM supporte mal la scalabilité (passage à
+l'échelle) sur de longues chaînes et présente dans ce contexte des chutes de
+performances et une augmentation de la consommation mémoire [3].
+
+L'objectif de ce stage est de comprendre et de caractériser les raisons du
+mauvais passage à l'échelle de la couche bloc de QEMU/KVM en présence de
+longues chaînes de snapshots. Un objectif additionnel est de proposer, dans la
+mesure du possible, des solutions aux problèmes de scalabilité identifiés.
+L'étude se portera sur les performances générales d'entrées/sorties des
+machines virtuelles mais également sur certaines opérations réalisées par
+l'hyperviseur, notamment le streaming [4] qui permet de réduire la taille de la
+chaîne en fusionnant des couches. Le stage peut être grossièrement décomposé en
+la série d'étapes suivantes :
+
+1) Étude dans les détails du format QCOW2 et de l'opération de snapshot ;
+2) Étude dans les détails de la couche pilote bloc/QCOW2 de QEMU gérant les
+   opérations d'entrées/sorties de la machine virtuelle, ainsi que l'opération
+   de streaming ;
+3) Identification des principaux facteurs impactant les performances et la
+   consommation mémoire dans la présence de longue chaînes QCOW2. Si possible,
+   développement de modèles prédictifs permettant d'estimer ces métriques ;
+4) Si possible, développement d'optimisations au sein de QEMU pour améliorer
+   la situation.
+
+Références
+[1] https://github.com/qemu/qemu/blob/master/docs/interop/qcow2.txt
+[2] https://wiki.qemu.org/Features/Snapshots
+[3] http://events17.linuxfoundation.org/sites/events/files/slides/How%20to%20Handle%20Globally%20Distributed%20QCOW2%20Chains_final_01.pdf
+[4] https://wiki.qemu.org/Features/Snapshots#Block_Streaming
