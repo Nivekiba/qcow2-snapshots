@@ -1,21 +1,63 @@
 
-base vanilla
+300 vanilla
 
-Watching PID 171493 page references during 1 seconds...
+Watching PID 41518 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.054      4156.99    4132.52      29.48
-
-1 vanilla
-
-Watching PID 171547 page references during 1 seconds...
-Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.044      4139.24    4116.65      25.64
-
-100 vanilla
-
-Watching PID 171633 page references during 1 seconds...
-Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.017       631.17     606.12       7.10
+1.038      4489.17    4460.85      14.68
 
 200 vanilla
 
+Watching PID 41673 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.042      4367.98    4340.80      23.23
+
+100 vanilla
+
+Watching PID 41802 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.038      4248.85    4220.37      10.80
+
+1 vanilla
+
+Watching PID 42051 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.037      4153.80    4124.58      27.46
+
+base vanilla
+
+Watching PID 42167 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.027      4151.01    4125.52      11.73
+
+
+
+
+300 hack_direct_common_cache
+
+Watching PID 42288 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.027      4206.40    4183.03      10.77
+
+200 hack_direct_common_cache
+
+Watching PID 42743 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.031      4188.90    4166.54      20.85
+
+100 hack_direct_common_cache
+
+Watching PID 43734 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.047      4172.35    4149.89      30.27
+
+1 hack_direct_common_cache
+
+Watching PID 44203 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.066      4153.33    4128.32      25.42
+
+base hack_direct_common_cache
+
+Watching PID 44400 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.057      4153.60    4131.14      20.93

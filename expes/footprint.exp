@@ -1,20 +1,11 @@
 #!/usr/bin/expect -f
 
-<<<<<<< HEAD
 set qemu_dir [lindex $argv 0]
 set filename [lindex $argv 1]
 
 set timeout -1
 
 spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 -serial stdio --accel kvm -m 4G -drive file=$filename,format=qcow2,l2-cache-size=7M,cache=none
-=======
-set qemu_dir    [lindex $argv 0]
-set filename    [lindex $argv 1]
-
-set timeout -1
-
-spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 -serial stdio --accel kvm -m 4G -drive file=$filename,format=qcow2
->>>>>>> bc9377f627eb54b0bbfdd2ac584714804c1db0f9
 
 expect "login: "
 send "root\n"
@@ -23,7 +14,6 @@ expect "Password: "
 send "a\n"
 
 expect "# "
-<<<<<<< HEAD
 send "ls\n"
 
 expect "# " 
@@ -41,6 +31,3 @@ send "ls\n"
 
 # expect "# "
 # send "shutdown -h now\n"
-=======
-send "shutdown -h now\n"
->>>>>>> bc9377f627eb54b0bbfdd2ac584714804c1db0f9

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 QEMU_DIR=$1
 image_file=$2
 QEMU=$QEMU_DIR/x86_64-softmmu/qemu-system-x86_64
@@ -9,12 +11,20 @@ sudo $QEMU --accel kvm -smp 4 -m 4G -drive file=$image_file,format=qcow2 -nic us
     -monitor unix:qemu-monitor-socket,server,nowait \
     -qmp unix:qemu-qmp-socket,server,nowait &
 
-sleep 120
+QEMU_ID=$!
 
-sshpass -p 'a' ssh -o StrictHostKeyChecking=no root@localhost -p 10022 'dd if=/dev/sda of=/dev/null bs=1M status=progress'
+sudo arp -d localhost
+sleep 180
+
+ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+    -i ./keys/id_rsa root@localhost -p 10022 'dd if=/dev/sda of=/dev/null bs=1M status=progress && rm -rf ~/.ssh/known_hosts'
 
 sudo ./get_wss.sh >> memory_footprint
 
-sshpass -p 'a' ssh -o StrictHostKeyChecking=no root@localhost -p 10022 'shutdown now'
+ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+    -i ./keys/id_rsa root@localhost -p 10022 'shutdown now'
 
-sleep 10
+kill -9 `ps -A | grep qemu | awk '{print $1}'` || echo "nothing killed"
+kill -9 $QEMU_ID || echo "nothing killed"
+
+sleep 60

@@ -76,10 +76,7 @@ typedef struct {
 BdrvChild** backing_array;
 bool* backing_array_inserted;
 BlockDriverState* top_bs = NULL;
-<<<<<<< HEAD
 int nb_ext_max = -1;
-=======
->>>>>>> bc9377f627eb54b0bbfdd2ac584714804c1db0f9
 
 static int l2_load(BlockDriverState *bs, uint64_t offset,
                    uint64_t l2_offset, uint64_t **l2_slice)
@@ -2652,8 +2649,10 @@ static coroutine_fn int qcow2_co_pwritev_task(BlockDriverState *bs,
             goto out_locked;
         }
     }
-    //}
     goto out_locked;
+
+out_unlocked:
+    qemu_co_mutex_lock(&s->lock);
 
 out_locked:
     qcow2_handle_l2meta(bs, &l2meta, false);
@@ -3842,16 +3841,20 @@ qcow2_co_create(BlockdevCreateOptions *create_options, Error **errp)
             // printf("size read: %d index: %d/%d, l1_entry_offset: %ld\n", r, i, l1_size, l1_entry_offset);
             for (j = 0; j < (1 << head->cluster_bits)/ (uint32_t)(sizeof(uint64_t)) ; j++) {
                 l2_slice[j] = be64_to_cpu(l2_slice[j]);
-                if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) != 0 )
-                    printf("before %lx => ", l2_slice[j]);
+                // if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) != 0 )
+                //     printf("before %lx => ", l2_slice[j]);
 
                 l2_slice[j] =  (l2_slice[j] & ~L2E_OFFSET_MASK);// & ~(1ULL<<63);
 
-                if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) == 0x1fe )
-                    l2_slice[j] = 1ULL<<63;
+                // if( 
+                //     (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) == 0x1fe
+                //     && 
+                //     (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK6) == L2E_BACKING_FILE_OFFSET_MASK_6
+                // )
+                //     l2_slice[j] = 1ULL<<63;
 
-                if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) != 0 )
-                    printf("after %lx\n", l2_slice[j]);
+                // if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) != 0 )
+                //     printf("after %lx\n", l2_slice[j]);
                 l2_slice[j] = cpu_to_be64(l2_slice[j]);
             }
             ret = bdrv_pwrite(blk_bs(blk)->file, l2_offset, l2_slice, s->cluster_size);// s->l2_slice_size * sizeof(uint64_t));

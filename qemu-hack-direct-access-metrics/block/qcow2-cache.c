@@ -362,14 +362,6 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 
     /* Cache miss: write a table back and replace it */
     i = min_lru_index;
-
-    FILE* f = fopen("stats_events.csv", "a");
-    // recuperer les events ici, cached, missed by snapshots
-    // event, offset, snapshot_ind
-    const char st[20] = "CACHE_MISSED";
-    fprintf(f, "%s;%ld;%d\n", st, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features));
-    fclose(f);
-
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
                                         c == s->l2_table_cache, i);
 
@@ -404,11 +396,6 @@ found:
     trace_qcow2_cache_get_done(qemu_coroutine_self(),
                                c == s->l2_table_cache, i);
 
-    FILE* ff = fopen("stats_events.csv", "a");
-    const char stt[20] = "CACHE_REQ";
-    fprintf(ff, "%s;%ld;%d\n", stt, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features));
-    fclose(ff);
-    
     return 0;
 }
 
