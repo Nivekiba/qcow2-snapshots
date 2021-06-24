@@ -612,13 +612,8 @@ found:
                 }
                    
                 if(modif){
-<<<<<<< HEAD
                     // printf("\nPrinting comparison\n");
                     // raise(SIGINT);
-=======
-                    printf("\nPrinting comparison\n");
-                    //raise(SIGINT);
->>>>>>> bc9377f627eb54b0bbfdd2ac584714804c1db0f9
                 }
                 *table = b;
                 qemu_vfree(buf);
