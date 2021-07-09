@@ -48,7 +48,6 @@
 #include "qemu/timer.h"
 #include "qemu/cutils.h"
 #include "qemu/id.h"
-#include "block/pierre.h"
 
 #ifdef CONFIG_BSD
 #include <sys/ioctl.h>
@@ -5592,14 +5591,13 @@ bool bdrv_is_inserted(BlockDriverState *bs)
         return drv->bdrv_is_inserted(bs);
     }
 
-#if PIERRE_BDRV_EJECT == 0
     BdrvChild *child;
     QLIST_FOREACH(child, &bs->children, next) {
         if (!bdrv_is_inserted(child->bs)) {
             return false;
         }
     }
-#endif
+    
     return true;
 }
 
@@ -5614,12 +5612,10 @@ void bdrv_eject(BlockDriverState *bs, bool eject_flag)
         drv->bdrv_eject(bs, eject_flag);
     }
 
-#if PIERRE_BDRV_EJECT == 1
     BdrvChild *child;
     QLIST_FOREACH(child, &bs->children, next) {
         bdrv_eject(child->bs, eject_flag);
     }
-#endif
 }
 
 /**

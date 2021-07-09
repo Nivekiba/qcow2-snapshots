@@ -1,63 +1,99 @@
 
 300 vanilla
 
-Watching PID 41518 page references during 1 seconds...
+Watching PID 5006 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.038      4489.17    4460.85      14.68
+1.023      4476.80    4443.23      50.96
 
 200 vanilla
 
-Watching PID 41673 page references during 1 seconds...
+Watching PID 5209 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.042      4367.98    4340.80      23.23
+1.010      4391.23    4357.68      42.41
 
 100 vanilla
 
-Watching PID 41802 page references during 1 seconds...
+Watching PID 5469 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.038      4248.85    4220.37      10.80
+1.008      4259.82    4226.20      27.55
 
 1 vanilla
 
-Watching PID 42051 page references during 1 seconds...
+Watching PID 5723 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.037      4153.80    4124.58      27.46
+1.006      4169.89    4136.10     141.17
 
 base vanilla
 
-Watching PID 42167 page references during 1 seconds...
+Watching PID 5813 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.027      4151.01    4125.52      11.73
+1.006      4161.57    4127.99      68.77
 
 
 
 
 300 hack_direct_common_cache
 
-Watching PID 42288 page references during 1 seconds...
+Watching PID 5911 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.027      4206.40    4183.03      10.77
+1.010      4232.78    4198.86      42.27
 
 200 hack_direct_common_cache
 
-Watching PID 42743 page references during 1 seconds...
+Watching PID 5996 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.031      4188.90    4166.54      20.85
+1.009      4212.80    4178.57      46.18
 
 100 hack_direct_common_cache
 
-Watching PID 43734 page references during 1 seconds...
+Watching PID 6127 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.047      4172.35    4149.89      30.27
+1.008      4204.05    4169.93      30.18
 
 1 hack_direct_common_cache
 
-Watching PID 44203 page references during 1 seconds...
+Watching PID 6241 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.066      4153.33    4128.32      25.42
+1.006      4172.11    4136.88      20.08
 
 base hack_direct_common_cache
 
-Watching PID 44400 page references during 1 seconds...
+Watching PID 6305 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
-1.057      4153.60    4131.14      20.93
+1.006      4173.70    4138.29      44.89
+
+
+
+
+300 hack_direct
+
+Watching PID 6400 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.021      4340.29    4308.30      72.32
+
+200 hack_direct
+
+Watching PID 6470 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.020      4295.68    4261.68      36.07
+
+100 hack_direct
+
+Watching PID 6525 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.018      4239.05    4205.24      32.27
+
+1 hack_direct
+
+Watching PID 6582 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.008      4169.55    4139.56      22.11
+
+base hack_direct
+
+Watching PID 6640 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.009      4164.81    4135.03      38.73
+Watching PID 40725 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.039      4237.49    4223.74      35.16
