@@ -32,17 +32,17 @@ sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/ub-18.04_50G.qcow2
 sleep 5
 
 echo "\n\r1 hack_direct_common_cache\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-1/snapshot-1
+sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-100/snapshot-300
 sleep 5
 
 echo "\n\r50 hack_direct_common_cache\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-50/snapshot-50
+sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-100/snapshot-200
 sleep 5
 
 echo "\n\r500 hack_direct_common_cache\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-500/snapshot-500
+sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-100/snapshot-100
 sleep 5
 
 echo "\n\r1000 hack_direct_common_cache\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-1000/snapshot-1000
+sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/chain-100/snapshot-1
 sleep 5

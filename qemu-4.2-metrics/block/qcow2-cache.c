@@ -270,11 +270,17 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
                     l2 == 0
                 )
                 {
+                    // printf("%4d- flushing %lx, %lx\n", k, l1, l2);
+                    // FILE* f = fopen("logger", "a");
+                    // fprintf(f, "flushing - %lx - %lx - %d - %d\n", l1, l2, k, i);
+                    // fclose(f);
                     buf2[k] = buf1[k];
                     modif = true;
                 }
             }
             if(modif){
+                // printf("curr_nb: %d, cur_max: %d\n", get_external_nb_snapshot_from_incompat(s->incompatible_features), nb_ext_maxi);
+                // raise(SIGINT);
                 ret = bdrv_pwrite(bs->file, c->entries[i].offset,
                                 buf2, c->table_size);
 
@@ -372,11 +378,11 @@ int qcow2_cache_empty(BlockDriverState *bs, Qcow2Cache *c)
 
     return 0;
 }
-int nb_cached = 0;
+// int nb_cached = 0;
 int nb_missed = 0;
 int nb_missed_common = 0;
-float time_missed = 0;
-float time_total = 0;
+// float time_missed = 0;
+// float time_total = 0;
 
 // todo: modifier cette fonction pour remplacer les entrees de table qui possede des UNALLOCATED
 static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
@@ -384,6 +390,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 {
     // clock_t uptime = clock();
     bool missed = false;
+    FILE* file_stats = fopen("stats_events.csv", "a");
     // printf("\t\t\t======entering cache=====\n");
 
     // nb_cached++;
@@ -445,6 +452,12 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 
     /* Cache miss: write a table back and replace it */
     missed = true;
+
+    // recuperer les events ici, cached, missed by snapshots
+    // event, offset, snapshot_ind
+    const char st[20] = "CACHE_MISSED";
+    fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_index, s->l1_table[l1_index] & L1E_OFFSET_MASK);
+
     i = min_lru_index;
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
                                         c == s->l2_table_cache, i);
@@ -617,6 +630,11 @@ found:
 
     if(c == s->l2_table_cache)
         c->entries[i].last_bs_req = bs;
+    
+    const char stt[20] = "CACHE_REQ";
+    fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", stt, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_index, s->l1_table[l1_index] & L1E_OFFSET_MASK);
+    fclose(file_stats);
+    
     return 0;
 }
 
