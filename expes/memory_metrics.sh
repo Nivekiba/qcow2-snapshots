@@ -10,7 +10,7 @@ disk_dir=/mnt/data/shareddir
 rm stats_events_vanilla.csv
 
 echo "\n\rbase vanilla\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/ub-18.04_50G.qcow2
+sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/qcow2-snapshots/expes/disk/ub-18.04_50G.qcow2
 mv stats_events_vanilla.csv vanilla0.csv
 
 echo "\n\r1 vanilla\n\r" >> memory_footprint
@@ -34,7 +34,7 @@ echo "\n\n" >> memory_footprint
 echo "\n\n" >> dd_footprint
 
 echo "\n\rbase hack_direct_common_cache\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2-metrics/build $disk_dir/ub-18.04_50G.qcow2
+sudo ./footprint_ssh.sh ../qemu-4.2-metrics/build $disk_dir/qcow2-snapshots/expes/disk/ub-18.04_50G.qcow2
 sleep 5
 mv stats_events.csv direct0.csv
 
