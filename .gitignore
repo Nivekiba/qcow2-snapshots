@@ -13,3 +13,5 @@ FlameGraph
 **/stats_events_vanilla.csv
 **/stats_events.csv
 /expes/diff
+memory_footprint*
+dd_footprint*
