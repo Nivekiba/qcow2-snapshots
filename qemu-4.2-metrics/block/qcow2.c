@@ -2232,6 +2232,7 @@ static coroutine_fn int qcow2_add_task(BlockDriverState *bs,
 
 // int ny, nn = 0;
 // int tim = 0;
+FILE* file_stats;
 
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QCow2ClusterType cluster_type,
@@ -2309,13 +2310,13 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
             }
         }
 
-        FILE* f = fopen("stats_events.csv", "a");
+        if(!file_stats)
+        FILE* file_stats = fopen("stats_events.csv", "a");
         // recuperer les events ici, cached, missed by snapshots
         // event, offset, snapshot_ind
         const char st[20] = "UNALLOCATED";
         unsigned int l1_ind = offset_to_l1_index(s, offset);
-        fprintf(f, "%s;%ld;%d;%d;%lld\n", st, offset, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
-        fclose(f);
+        fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
 
         // nn++;
         // tim += clock() - time;
@@ -2345,13 +2346,13 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
             return -EIO;
         }
 
-        FILE* ff = fopen("stats_events.csv", "a");
+        if(!file_stats)
+        file_stats = fopen("stats_events.csv", "a");
         // recuperer les events ici, cached, missed by snapshots
         // event, offset, snapshot_ind
         const char stt[20] = "NORMAL";
         unsigned int l1_indd = offset_to_l1_index(s, offset);
-        fprintf(ff, "%s;%lld;%d;%d;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
-        fclose(ff);
+        fprintf(file_stats, "%s;%lld;%d;%d;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
 
         BdrvChild* tmps = backing_array[checkpoint_entry];
         BlockDriverState* bss = bs;
