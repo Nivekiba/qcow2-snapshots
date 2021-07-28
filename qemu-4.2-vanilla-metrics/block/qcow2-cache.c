@@ -386,8 +386,11 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     file_stats = fopen("stats_events_vanilla.csv", "a");
     // recuperer les events ici, cached, missed by snapshots
     // event, offset, snapshot_ind
-    const char st[20] = "CACHE_MISSED";
-    fprintf(file_stats, "%s;%ld;%d\n", st, offset, get_indd_bs(bs));
+    if(c == s->l2_table_cache){
+        const char st[20] = "CACHE_MISSED";
+        //fprintf(file_stats, "%s;%ld;%d\n", st, offset, get_indd_bs(bs));
+        fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, get_indd_bs(bs), current_l1_index, s->l1_table[current_l1_index] & L1E_OFFSET_MASK);
+    }
 
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
                                         c == s->l2_table_cache, i);
@@ -423,8 +426,13 @@ found:
     trace_qcow2_cache_get_done(qemu_coroutine_self(),
                                c == s->l2_table_cache, i);
 
-    const char stt[20] = "CACHE_REQ";
-    fprintf(file_stats, "%s;%ld;%d\n", stt, offset, get_indd_bs(bs));
+
+    if(c == s->l2_table_cache){
+        const char stt[20] = "CACHE_REQ";
+        //fprintf(file_stats, "%s;%ld;%d\n", stt, offset, get_indd_bs(bs));
+        fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", stt, offset, get_indd_bs(bs), current_l1_index, s->l1_table[current_l1_index] & L1E_OFFSET_MASK);
+    }
+
     return 0;
 }
 
