@@ -2311,7 +2311,7 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         }
 
         if(!file_stats)
-        FILE* file_stats = fopen("stats_events.csv", "a");
+        file_stats = fopen("stats_events.csv", "a");
         // recuperer les events ici, cached, missed by snapshots
         // event, offset, snapshot_ind
         const char st[20] = "UNALLOCATED";
