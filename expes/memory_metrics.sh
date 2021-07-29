@@ -8,6 +8,7 @@ disk_dir=/mnt/data/shareddir
 # sudo cp disk/chain-100-b/back-snapshot-100 disk/chain-100-b/snapshot-100
 # sudo cp disk/chain-100-b/back-snapshot-1 disk/chain-100-b/snapshot-1
 rm stats_events_vanilla.csv
+rm stats_events.csv
 
 echo "\n\rbase vanilla\n\r" >> memory_footprint
 sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/qcow2-snapshots/expes/disk/ub-18.04_50G.qcow2
@@ -25,9 +26,9 @@ echo "\n\r500 vanilla\n\r" >> memory_footprint
 sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/chain-500-b/snapshot-500
 mv stats_events_vanilla.csv vanilla500.csv
 
-echo "\n\r1000 vanilla\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/chain-1000-b/snapshot-970
-mv stats_events_vanilla.csv vanilla1000.csv
+# echo "\n\r1000 vanilla\n\r" >> memory_footprint
+# sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/chain-1000-b/snapshot-970
+# mv stats_events_vanilla.csv vanilla1000.csv
 
 ## Full memory common
 echo "\n\n" >> memory_footprint

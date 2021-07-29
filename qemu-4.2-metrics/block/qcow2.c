@@ -2317,7 +2317,7 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         const char st[20] = "UNALLOCATED";
         unsigned int l1_ind = offset_to_l1_index(s, offset);
         fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
-
+        fflush(file_stats);
         // nn++;
         // tim += clock() - time;
         assert(bs->backing); /* otherwise handled in qcow2_co_preadv_part */
@@ -2353,6 +2353,7 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         const char stt[20] = "NORMAL";
         unsigned int l1_indd = offset_to_l1_index(s, offset);
         fprintf(file_stats, "%s;%lld;%d;%d;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
+        fflush(file_stats);
 
         BdrvChild* tmps = backing_array[checkpoint_entry];
         BlockDriverState* bss = bs;

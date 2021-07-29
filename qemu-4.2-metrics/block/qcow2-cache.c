@@ -460,6 +460,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     if(c == s->l2_table_cache && l1_index != -1){
         const char st[20] = "CACHE_MISSED";
         fprintf(file_statss, "%s;%ld;%d;%d;%lld\n", st, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_index, s->l1_table[l1_index] & L1E_OFFSET_MASK);
+        fflush(file_statss);
     }
     i = min_lru_index;
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
@@ -637,6 +638,7 @@ found:
     if(c == s->l2_table_cache && l1_index != -1){
         const char stt[20] = "CACHE_REQ";
         fprintf(file_statss, "%s;%ld;%d;%d;%lld\n", stt, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_index, s->l1_table[l1_index] & L1E_OFFSET_MASK);
+        fflush(file_statss);
     }
     return 0;
 }
