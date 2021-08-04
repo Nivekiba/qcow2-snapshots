@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm memory_footprint
 rm dd_footprint
 
@@ -26,9 +28,9 @@ echo "\n\r500 vanilla\n\r" >> memory_footprint
 sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/chain-500-b/snapshot-500
 mv stats_events_vanilla.csv vanilla500.csv
 
-# echo "\n\r1000 vanilla\n\r" >> memory_footprint
-# sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/chain-1000-b/snapshot-970
-# mv stats_events_vanilla.csv vanilla1000.csv
+echo "\n\r1000 vanilla\n\r" >> memory_footprint
+sudo ./footprint_ssh.sh ../qemu-4.2-vanilla-metrics/build $disk_dir/chain-1000-b/snapshot-970
+mv stats_events_vanilla.csv vanilla1000.csv
 
 ## Full memory common
 echo "\n\n" >> memory_footprint
