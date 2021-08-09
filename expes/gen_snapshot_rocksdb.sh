@@ -32,12 +32,13 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
 ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package"
 
+target=1000
 echo "
-recordcount=1200000
+recordcount=1000000
 rocksdb.dir=/root/ycsb-db
 fieldcount=150
 fieldlength=150
-target=1000
+target=$target
 operationcount=100000
 measurementtype=timeseries
 timeseries.granularity=2000
@@ -63,7 +64,7 @@ rm -rf -- ./snapshot-tests/snapshot-*
 mkdir -p ./snapshot-tests
 
 i=0
-SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "1000000.0 / (1000*$ITERATIONS)" | bc -l)
+SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "1000000.0 / ($target*$ITERATIONS) - 0.6" | bc -l)
 
 while true; do
     let i="$i+1"
