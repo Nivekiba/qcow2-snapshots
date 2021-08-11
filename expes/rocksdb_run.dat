@@ -1,10 +1,9 @@
 
-rocksdb.dir=/root/ycsb-db
 recordcount=1000000
+rocksdb.dir=/root/ycsb-db
 fieldcount=150
 fieldlength=150
-insertstart=180000
-insertcount=5000
+target=500
 measurementtype=timeseries
 timeseries.granularity=2000
-    
+

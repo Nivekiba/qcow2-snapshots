@@ -30,12 +30,12 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 'dpkg --configure -a && apt --fix-broken install -y && apt-get update -y && apt-get install maven git -y'
 
 ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
-    -i ./keys/id_rsa root@localhost -p 10022 "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package"
-
-
-ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 \
     "rm -rf -- ~/ycsb-db || echo Deletion DB"
+
+ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+    -i ./keys/id_rsa root@localhost -p 10022 "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package"
+
 
 rm -rf -- ./snapshot-tests/snapshot-*
 mkdir -p ./snapshot-tests
@@ -43,7 +43,7 @@ mkdir -p ./snapshot-tests
 i=0
 recordcount=1000000
 target=500
-workload_dir=/tmp/ycsb-db
+workload_dir=/root/ycsb-db
 index_current_snap=0
 count_per_snap=$((recordcount/ITERATIONS))
 
@@ -56,8 +56,8 @@ while true; do
     fi
 
     echo "
-recordcount=$recordcount
 rocksdb.dir=$workload_dir
+recordcount=$recordcount
 fieldcount=150
 fieldlength=150
 insertstart=$index_current_snap
@@ -73,7 +73,7 @@ timeseries.granularity=2000
 
     ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
         -i ./keys/id_rsa root@localhost -p 10022 \
-        "cd ~/YCSB && ./bin/ycsb load rocksdb -s -P workloads/workloada -P ~/rocksdb.dat"
+        "cd ~/YCSB && ./bin/ycsb load rocksdb -s -P workloads/workloada -P ~/rocksdb.dat && sync"
 
     # SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "$recordcount.0 / ($target*$ITERATIONS) + 0.6" | bc -l)
     # sleep $SLEEP_BETWEEN_ITERATIONS_SEC
