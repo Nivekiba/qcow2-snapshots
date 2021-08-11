@@ -32,61 +32,74 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
 ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package"
 
-target=1000
-echo "
-recordcount=1000000
-rocksdb.dir=/root/ycsb-db
-fieldcount=150
-fieldlength=150
-target=$target
-operationcount=100000
-measurementtype=timeseries
-timeseries.granularity=2000
-" > rocksdb.dat
-
-scp -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
-    -i ./keys/id_rsa -P 10022 rocksdb.dat root@localhost:~
-
 
 ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 \
     "rm -rf -- ~/ycsb-db || echo Deletion DB"
 
-
-ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
-    -i ./keys/id_rsa root@localhost -p 10022 \
-    "cd ~/YCSB && ./bin/ycsb load rocksdb -s -P workloads/workloada -P ~/rocksdb.dat && fsync" &
-
-REMOTE_YCSB_PID=$!
-
-# Create snapshot while writing
 rm -rf -- ./snapshot-tests/snapshot-*
 mkdir -p ./snapshot-tests
 
 i=0
-SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "1000000.0 / ($target*$ITERATIONS) - 0.6" | bc -l)
+recordcount=1000000
+target=500
+workload_dir=/tmp/ycsb-db
+index_current_snap=0
+count_per_snap=$((recordcount/ITERATIONS))
 
 while true; do
+
     let i="$i+1"
     if [[ $i -gt $ITERATIONS ]]; then
         echo "Done, exiting"
         break
     fi
 
-    sleep $SLEEP_BETWEEN_ITERATIONS_SEC
+    echo "
+recordcount=$recordcount
+rocksdb.dir=$workload_dir
+fieldcount=150
+fieldlength=150
+insertstart=$index_current_snap
+insertcount=$count_per_snap
+measurementtype=timeseries
+timeseries.granularity=2000
+    " > rocksdb.dat
+
+    let index_current_snap="$index_current_snap+$count_per_snap"
+
+    scp -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+        -i ./keys/id_rsa -P 10022 rocksdb.dat root@localhost:~
+
+    ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+        -i ./keys/id_rsa root@localhost -p 10022 \
+        "cd ~/YCSB && ./bin/ycsb load rocksdb -s -P workloads/workloada -P ~/rocksdb.dat"
+
+    # SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "$recordcount.0 / ($target*$ITERATIONS) + 0.6" | bc -l)
+    # sleep $SLEEP_BETWEEN_ITERATIONS_SEC
 
     filename=./snapshot-tests/snapshot-$i
     filename=`realpath $filename`
     sudo ./manual-snapshot.sh $filename
 done
 
-wait $REMOTE_YCSB_PID
+echo "
+recordcount=$recordcount
+rocksdb.dir=$workload_dir
+fieldcount=150
+fieldlength=150
+target=$target
+measurementtype=timeseries
+timeseries.granularity=2000
+" > rocksdb_run.dat
+
+scp -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+    -i ./keys/id_rsa -P 10022 rocksdb_run.dat root@localhost:~
 # End of script
 
 ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 'shutdown now'
 
-rm rocksdb.dat
 wait $QEMU_ID
 
 sleep 15
