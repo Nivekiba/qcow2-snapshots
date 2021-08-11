@@ -16,3 +16,4 @@ FlameGraph
 memory_footprint*
 dd_footprint*
 **/*.csv
+**/*.dat
