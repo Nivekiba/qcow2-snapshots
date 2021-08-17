@@ -77,7 +77,7 @@ timeseries.granularity=2000
 
     # SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "$recordcount.0 / ($target*$ITERATIONS) + 0.6" | bc -l)
     # sleep $SLEEP_BETWEEN_ITERATIONS_SEC
-
+    sleep 5
     filename=./snapshot-tests/snapshot-$i
     filename=`realpath $filename`
     sudo ./manual-snapshot.sh $filename
