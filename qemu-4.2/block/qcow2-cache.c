@@ -394,7 +394,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 
 #ifdef DEBUG_TIME
     int time_missed = clock();
-    int time_hit = clock();
+    int time_hit = time_missed;
     if(!file_tim2)
         file_tim2 = fopen(DEBUG_TIME_FILE, "a");
 #endif
@@ -647,8 +647,6 @@ found:
 
 #ifdef DEBUG_TIME
     time_hit = clock() - time_missed - time_hit;
-    if(!missed)
-        time_hit = clock() - time_hit;
     fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
     if(missed)
         fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
