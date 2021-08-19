@@ -650,8 +650,6 @@ found:
     fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
     if(missed)
         fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
-    fclose(file_tim2);
-    file_tim2 = NULL;
 #endif
 
     return 0;
