@@ -647,6 +647,8 @@ found:
 
 #ifdef DEBUG_TIME
     time_hit = clock() - time_missed - time_hit;
+    if(!missed)
+        time_hit = clock() - time_hit;
     fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
     if(missed)
         fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
