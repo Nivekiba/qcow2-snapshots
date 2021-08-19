@@ -396,7 +396,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     int time_missed = clock();
     int time_hit = clock();
     if(!file_tim2)
-        file_tim2 = fopen(DEBUG_TIME_FILE, "w");
+        file_tim2 = fopen(DEBUG_TIME_FILE, "a");
 #endif
     // clock_t uptime = clock();
     bool missed = false;
