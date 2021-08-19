@@ -2409,7 +2409,7 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
             backing_ind_t = get_external_nb_snapshot_from_incompat(s->incompatible_features);
         }
         if(!file_tim)
-            file_tim = fopen(DEBUG_TIME_FILE, "a");
+            file_tim = fopen(DEBUG_TIME_FILE, "w");
 #endif
     int ret = 0;
     unsigned int cur_bytes; /* number of bytes in current iteration */
