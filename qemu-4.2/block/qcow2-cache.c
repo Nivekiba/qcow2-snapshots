@@ -651,6 +651,8 @@ found:
     if(missed)
         fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
     fflush(file_tim2);
+    fclose(file_tim2);
+    file_tim2 = NULL;
 #endif
 
     return 0;
