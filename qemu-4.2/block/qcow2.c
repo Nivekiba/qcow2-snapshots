@@ -2251,15 +2251,6 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
     uint64_t l2_entry;
     BdrvChild *tmp = bs->backing;
 
-#ifdef DEBUG_TIME
-        if(tim == -1){
-            tim = clock();
-            backing_ind_t = nb_ext;
-        }
-        if(!file_tim)
-            file_tim = fopen(DEBUG_TIME_FILE, "w");
-#endif
-
     // first time we enter here, we set up the top qcow2 blockdriverstate of the tree
     if(!top_bs){
         top_bs = bs;
@@ -2379,6 +2370,7 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
 #ifdef DEBUG_TIME
         tim = clock() - tim;
         fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        fflush(file_tim);
         tim = -1;
 #endif    
         BLKDBG_EVENT(bss->file, BLKDBG_READ_AIO);
@@ -2412,6 +2404,14 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
                                              size_t qiov_offset, int flags)
 {
     BDRVQcow2State *s = bs->opaque;
+#ifdef DEBUG_TIME
+        if(tim == -1){
+            tim = clock();
+            backing_ind_t = get_external_nb_snapshot_from_incompat(s->incompatible_features);
+        }
+        if(!file_tim)
+            file_tim = fopen(DEBUG_TIME_FILE, "w");
+#endif
     int ret = 0;
     unsigned int cur_bytes; /* number of bytes in current iteration */
     uint64_t cluster_offset = 0;

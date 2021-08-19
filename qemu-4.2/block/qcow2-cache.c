@@ -510,11 +510,14 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 
     /* And return the right table */
     // printf("missed\n");
-#ifdef DEBUG_TIME
-    time_missed = clock() - time_missed;
-#endif
+
 
 found:
+
+#ifdef DEBUG_TIME
+    time_missed = clock() - time_missed;
+    if(missed) time_missed = 0;
+#endif
     // printf("end\n");
     c->entries[i].ref++;
 
@@ -646,6 +649,7 @@ found:
     time_hit = clock() - time_missed - time_hit;
     fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
     fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+    fflush(file_tim2);
 #endif
 
     return 0;
