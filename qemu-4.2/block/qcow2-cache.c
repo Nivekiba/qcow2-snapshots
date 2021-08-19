@@ -516,7 +516,7 @@ found:
 
 #ifdef DEBUG_TIME
     time_missed = clock() - time_missed;
-    if(missed) time_missed = 0;
+    if(!missed) time_missed = 0;
 #endif
     // printf("end\n");
     c->entries[i].ref++;
