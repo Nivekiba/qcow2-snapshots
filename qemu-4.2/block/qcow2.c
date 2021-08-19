@@ -2378,7 +2378,7 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         }
 #ifdef DEBUG_TIME
         tim = clock() - tim;
-        fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d", backing_ind_t, tim);
+        fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
         tim = -1;
 #endif    
         BLKDBG_EVENT(bss->file, BLKDBG_READ_AIO);

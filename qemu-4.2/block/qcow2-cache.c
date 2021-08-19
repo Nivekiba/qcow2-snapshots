@@ -391,7 +391,7 @@ int nb_missed_common = 0;
 static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     uint64_t offset, void **table, bool read_from_disk, unsigned int l1_index, unsigned int start_slice)
 {
-    
+
 #ifdef DEBUG_TIME
     int time_missed = clock();
     int time_hit = clock();
@@ -644,8 +644,8 @@ found:
 
 #ifdef DEBUG_TIME
     time_hit = clock() - time_missed - time_hit;
-    fprintf(file_tim2, "HIT;-1;%d", time_hit);
-    fprintf(file_tim2, "MISSED;-1;%d", time_missed);
+    fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
+    fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
 #endif
 
     return 0;
