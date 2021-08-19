@@ -646,10 +646,12 @@ found:
         c->entries[i].last_bs_req = bs;
 
 #ifdef DEBUG_TIME
-    time_hit = clock() - time_missed - time_hit;
-    fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
-    if(missed)
-        fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+    if(c == s->l2_table_cache){
+        time_hit = clock() - time_missed - time_hit;
+        fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
+        if(missed)
+            fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+    }
 #endif
 
     return 0;
