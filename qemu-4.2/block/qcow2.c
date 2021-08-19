@@ -2231,7 +2231,11 @@ static coroutine_fn int qcow2_add_task(BlockDriverState *bs,
 }
 
 // int ny, nn = 0;
-// int tim = 0;
+#ifdef DEBUG_TIME
+    int tim = -1;
+    int backing_ind_t = -1;
+    FILE* file_tim = NULL;
+#endif
 
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QCow2ClusterType cluster_type,
@@ -2240,13 +2244,21 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QEMUIOVector *qiov,
                                              size_t qiov_offset)
 {
-    // clock_t time = clock();
     BDRVQcow2State *s = bs->opaque;
     int offset_in_cluster = offset_into_cluster(s, offset);
     int checkpoint_entry;
     int nb_ext = get_external_nb_snapshot_from_incompat(s->incompatible_features);
     uint64_t l2_entry;
     BdrvChild *tmp = bs->backing;
+
+#ifdef DEBUG_TIME
+        if(tim == -1){
+            tim = clock();
+            backing_ind_t = nb_ext;
+        }
+        if(!file_tim)
+            file_tim = fopen(DEBUG_TIME_FILE, "w");
+#endif
 
     // first time we enter here, we set up the top qcow2 blockdriverstate of the tree
     if(!top_bs){
@@ -2364,7 +2376,11 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
             return qcow2_co_preadv_encrypted(bss, file_cluster_offset,
                                              offset, bytes, qiov, qiov_offset);
         }
-        
+#ifdef DEBUG_TIME
+        tim = clock() - tim;
+        fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d", backing_ind_t, tim);
+        tim = -1;
+#endif    
         BLKDBG_EVENT(bss->file, BLKDBG_READ_AIO);
         return bdrv_co_preadv_part(ss->data_file,
                                    file_cluster_offset + offset_in_cluster,

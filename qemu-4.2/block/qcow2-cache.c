@@ -384,10 +384,20 @@ int nb_missed_common = 0;
 // float time_missed = 0;
 // float time_total = 0;
 
-// todo: modifier cette fonction pour remplacer les entrees de table qui possede des UNALLOCATED
+#ifdef DEBUG_TIME
+    FILE* file_tim2 = NULL;
+#endif
+
 static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     uint64_t offset, void **table, bool read_from_disk, unsigned int l1_index, unsigned int start_slice)
 {
+    
+#ifdef DEBUG_TIME
+    int time_missed = clock();
+    int time_hit = clock();
+    if(!file_tim2)
+        file_tim2 = fopen(DEBUG_TIME_FILE, "w");
+#endif
     // clock_t uptime = clock();
     bool missed = false;
     // printf("\t\t\t======entering cache=====\n");
@@ -500,6 +510,10 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 
     /* And return the right table */
     // printf("missed\n");
+#ifdef DEBUG_TIME
+    time_missed = clock() - time_missed;
+#endif
+
 found:
     // printf("end\n");
     c->entries[i].ref++;
@@ -541,12 +555,17 @@ found:
                 nb_missed_common++;
                 // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);
                 uint64_t* buf = qemu_try_blockalign(bs, (size_t)c->table_size);
-
+#ifdef DEBUG_TIME
+    time_missed = time_missed - clock();
+#endif
                 int ret2 = bdrv_pread(bs->file, offset,
                          buf,
                         //  qcow2_cache_get_table_addr(c, i),
                          c->table_size);
-                
+#ifdef DEBUG_TIME
+    time_missed = time_missed + clock();
+#endif
+
                 if (ret2 < 0) {
                     return ret2;
                 }
@@ -587,8 +606,7 @@ found:
                         //         qcow2_get_cluster_type(bs, bb)
                         //         , offset);
                         b[y] = a[y];
-                        if(i == 20 || i == 21 || aa == 0x800000000000002a || bb == 0x800000000000002a)
-                            modif = true;
+                        modif = true;
                     }
                     // else{
                     //     printf(
@@ -623,6 +641,13 @@ found:
 
     if(c == s->l2_table_cache)
         c->entries[i].last_bs_req = bs;
+
+#ifdef DEBUG_TIME
+    time_hit = clock() - time_missed - time_hit;
+    fprintf(file_tim2, "HIT;-1;%d", time_hit);
+    fprintf(file_tim2, "MISSED;-1;%d", time_missed);
+#endif
+
     return 0;
 }
 
