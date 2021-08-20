@@ -2176,8 +2176,6 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
     int offset_in_cluster = offset_into_cluster(s, offset);
 
 
-    if(!top_bs) top_bs = bs;
-
     switch (cluster_type) {
     case QCOW2_CLUSTER_ZERO_PLAIN:
     case QCOW2_CLUSTER_ZERO_ALLOC:
@@ -2241,6 +2239,9 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
     unsigned int cur_bytes; /* number of bytes in current iteration */
     uint64_t cluster_offset = 0;
     AioTaskPool *aio = NULL;
+
+
+    if(!top_bs) top_bs = bs;
 
 #ifdef DEBUG_TIME
     if(tim == -1){
