@@ -2141,6 +2141,30 @@ static coroutine_fn int qcow2_add_task(BlockDriverState *bs,
     return 0;
 }
 
+
+BlockDriverState* top_bs;
+
+static int get_indd_bs(BlockDriverState* bs){
+    if(bs->backing == NULL)
+        return 0;
+    int bs_ext=0;
+    int nb_ext_max=0;
+    BdrvChild* tmp = top_bs->backing;
+    while(tmp->bs->backing != NULL){
+        nb_ext_max++;
+        if(tmp->bs == bs)
+            bs_ext = nb_ext_max;
+        tmp = tmp->bs->backing;
+    }
+    return nb_ext_max - bs_ext + 1;
+}
+
+#ifdef DEBUG_TIME
+    int tim = -1;
+    int backing_ind_t = -1;
+    FILE* file_tim = NULL;
+#endif
+
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QCow2ClusterType cluster_type,
                                              uint64_t file_cluster_offset,
@@ -2150,6 +2174,9 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
 {
     BDRVQcow2State *s = bs->opaque;
     int offset_in_cluster = offset_into_cluster(s, offset);
+
+
+    if(!top_bs) top_bs = bs;
 
     switch (cluster_type) {
     case QCOW2_CLUSTER_ZERO_PLAIN:
@@ -2177,7 +2204,11 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
             return qcow2_co_preadv_encrypted(bs, file_cluster_offset,
                                              offset, bytes, qiov, qiov_offset);
         }
-
+#ifdef DEBUG_TIME
+        tim = clock() - tim;
+        fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        tim = -1;
+#endif 
         BLKDBG_EVENT(bs->file, BLKDBG_READ_AIO);
         return bdrv_co_preadv_part(s->data_file,
                                    file_cluster_offset + offset_in_cluster,
@@ -2210,6 +2241,15 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
     unsigned int cur_bytes; /* number of bytes in current iteration */
     uint64_t cluster_offset = 0;
     AioTaskPool *aio = NULL;
+
+#ifdef DEBUG_TIME
+    if(tim == -1){
+        tim = clock();
+        backing_ind_t = get_indd_bs(bs);
+    }
+    if(!file_tim)
+        file_tim = fopen(DEBUG_TIME_FILE, "a");
+#endif
 
     while (bytes != 0 && aio_task_pool_status(aio) == 0) {
         /* prepare next request */

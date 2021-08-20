@@ -316,6 +316,11 @@ int qcow2_cache_empty(BlockDriverState *bs, Qcow2Cache *c)
     return 0;
 }
 
+
+#ifdef DEBUG_TIME
+    FILE* file_tim2 = NULL;
+#endif
+
 static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     uint64_t offset, void **table, bool read_from_disk)
 {
@@ -325,6 +330,13 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     int lookup_index;
     uint64_t min_lru_counter = UINT64_MAX;
     int min_lru_index = -1;
+    bool missed = false;
+#ifdef DEBUG_TIME
+    int time_missed = clock();
+    int time_hit = time_missed;
+    if(!file_tim2)
+        file_tim2 = fopen(DEBUG_TIME_FILE, "a");
+#endif
 
     assert(offset != 0);
 
@@ -361,6 +373,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     }
 
     /* Cache miss: write a table back and replace it */
+    missed = true;
     i = min_lru_index;
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
                                         c == s->l2_table_cache, i);
@@ -390,11 +403,25 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 
     /* And return the right table */
 found:
+
+#ifdef DEBUG_TIME
+    time_missed = clock() - time_missed;
+    if(!missed) time_missed = 0;
+#endif
+
     c->entries[i].ref++;
     *table = qcow2_cache_get_table_addr(c, i);
 
     trace_qcow2_cache_get_done(qemu_coroutine_self(),
                                c == s->l2_table_cache, i);
+#ifdef DEBUG_TIME
+    if(c == s->l2_table_cache){
+        time_hit = clock() - time_missed - time_hit;
+        fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
+        if(missed)
+            fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+    }
+#endif
 
     return 0;
 }
