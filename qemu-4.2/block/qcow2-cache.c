@@ -384,10 +384,6 @@ int nb_missed_common = 0;
 // float time_missed = 0;
 // float time_total = 0;
 
-#ifdef DEBUG_TIME
-    FILE* file_tim2 = NULL;
-#endif
-
 static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     uint64_t offset, void **table, bool read_from_disk, unsigned int l1_index, unsigned int start_slice)
 {
@@ -395,8 +391,6 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 #ifdef DEBUG_TIME
     int time_missed = clock();
     int time_hit = time_missed;
-    if(!file_tim2)
-        file_tim2 = fopen(DEBUG_TIME_FILE, "w");
 #endif
     // clock_t uptime = clock();
     bool missed = false;
