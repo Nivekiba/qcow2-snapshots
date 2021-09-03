@@ -9,7 +9,7 @@ disk_dir=/mnt/data/shareddir
 # sudo cp disk/chain-100-b/back-snapshot-1 disk/chain-100-b/snapshot-1
 
 echo "\n\rbase vanilla\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2-vanilla/build $disk_dir/ub-18.04_50G.qcow2
+sudo ./footprint_ssh.sh ../qemu-4.2-vanilla/build $disk_dir/qcow2-snapshots/expes/disk/ub-18.04_50G.qcow2
 
 echo "\n\r1 vanilla\n\r" >> memory_footprint
 sudo ./footprint_ssh.sh ../qemu-4.2-vanilla/build $disk_dir/chain-1-b/snapshot-1
@@ -28,7 +28,7 @@ echo "\n\n" >> memory_footprint
 echo "\n\n" >> dd_footprint
 
 echo "\n\rbase hack_direct_common_cache\n\r" >> memory_footprint
-sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/ub-18.04_50G.qcow2
+sudo ./footprint_ssh.sh ../qemu-4.2/build $disk_dir/qcow2-snapshots/expes/disk/ub-18.04_50G.qcow2
 sleep 5
 
 echo "\n\r1 hack_direct_common_cache\n\r" >> memory_footprint
