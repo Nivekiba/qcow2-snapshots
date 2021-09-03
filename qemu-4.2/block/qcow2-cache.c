@@ -544,6 +544,9 @@ found:
     
     // if(!!c->entries[i].last_bs_req){
     bool modif = false;
+/**
+ * creer un tableau a la place de faire des fprintf
+ */
     // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);
                 
     if(c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
@@ -648,9 +651,24 @@ found:
 #ifdef DEBUG_TIME
     if(c == s->l2_table_cache){
         time_hit = clock() - time_missed - time_hit;
-        fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
-        if(missed)
-            fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+        LogDataTime tmplog1 = {
+            .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
+            .time = time_hit
+        };
+        strcpy(tmplog1.event, "HIT");
+        log_datas[index_log] = tmplog1;
+        index_log++;
+        //fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
+        if(missed){
+            // fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+            LogDataTime tmplog2 = {
+                .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
+                .time = time_hit
+            };
+            strcpy(tmplog2.event, "MISSED");
+            log_datas[index_log] = tmplog2;
+            index_log++;
+        }
     }
 #endif
 

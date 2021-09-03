@@ -2234,6 +2234,8 @@ static coroutine_fn int qcow2_add_task(BlockDriverState *bs,
 #ifdef DEBUG_TIME
     int tim = -1;
     int backing_ind_t = -1;
+    LogDataTime* log_datas;
+    int index_log = 0;
     FILE* file_tim = NULL;
 #endif
 
@@ -2369,8 +2371,15 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         }
 #ifdef DEBUG_TIME
         tim = clock() - tim;
-        fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        //fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        LogDataTime tmplog = {
+            .snap_id = backing_ind_t,
+            .time = tim
+        };
+        strcpy(tmplog.event, "UNALLOCATED_MISSED");
         tim = -1;
+        log_datas[index_log] = tmplog;
+        index_log++;
 #endif    
         BLKDBG_EVENT(bss->file, BLKDBG_READ_AIO);
         return bdrv_co_preadv_part(ss->data_file,
@@ -2410,6 +2419,8 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
         }
         if(!file_tim)
             file_tim = fopen(DEBUG_TIME_FILE, "w");
+        if(!log_datas)
+            log_datas = (LogDataTime*)calloc(DEBUG_TIME_MAX_NB_ELT, sizeof(LogDataTime));
 #endif
     int ret = 0;
     unsigned int cur_bytes; /* number of bytes in current iteration */
@@ -2872,6 +2883,14 @@ static void qcow2_close(BlockDriverState *bs)
         // destroy common l2 cache at the last image closure
         qcow2_cache_destroy(s->l2_table_cache);
         qcow2_cache_destroy(write_cache);
+        
+#ifdef DEBUG_TIME
+        int ind;
+        for(ind = 0; ind < index_log; ind++){
+            fprintf(file_tim, "%s;%d;%d\n", log_datas[ind].event, log_datas[ind].snap_id, log_datas[ind].time);
+        }
+        fclose(file_tim);
+#endif
     }
 
     // if(!!write_cache){
