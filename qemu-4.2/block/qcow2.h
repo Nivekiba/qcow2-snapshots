@@ -35,7 +35,7 @@
 //#define DEBUG_EXT
 #define DEBUG_TIME
 #define DEBUG_TIME_FILE "time.csv"
-#define DEBUG_TIME_MAX_NB_ELT 400000000
+#define DEBUG_TIME_MAX_NB_ELT 500000000
 
 typedef struct LogDataTime {
     char event[20];

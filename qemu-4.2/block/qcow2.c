@@ -2380,6 +2380,10 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         tim = -1;
         log_datas[index_log] = tmplog;
         index_log++;
+        if(index_log > DEBUG_TIME_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
 #endif    
         BLKDBG_EVENT(bss->file, BLKDBG_READ_AIO);
         return bdrv_co_preadv_part(ss->data_file,
