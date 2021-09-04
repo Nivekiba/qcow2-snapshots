@@ -2898,6 +2898,7 @@ static void qcow2_close(BlockDriverState *bs)
             fprintf(file_tim, "%s;%d;%d\n", log_datas[ind].event, log_datas[ind].snap_id, log_datas[ind].time);
         }
         fclose(file_tim);
+        free(log_datas);
 #endif
     }
 
