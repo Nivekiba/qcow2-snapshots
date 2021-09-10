@@ -97,3 +97,9 @@ Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
 Watching PID 40725 page references during 1 seconds...
 Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
 1.039      4237.49    4223.74      35.16
+Watching PID 26439 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.013      4179.05    4164.28      30.21
+Watching PID 26743 page references during 1 seconds...
+Est(s)     RSS(MB)    PSS(MB)    Ref(MB)
+1.022      4178.34    4166.77      15.51

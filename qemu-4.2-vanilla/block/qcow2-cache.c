@@ -316,6 +316,24 @@ int qcow2_cache_empty(BlockDriverState *bs, Qcow2Cache *c)
     return 0;
 }
 
+BlockDriverState* top_bss;
+
+static int get_indd_bss(BlockDriverState* bs){
+    if(bs->backing == NULL)
+        return 0;
+    if(top_bss == NULL)
+        top_bss = bs;
+    int bs_ext=0;
+    int nb_ext_max=0;
+    BdrvChild* tmp = top_bss->backing;
+    while(tmp->bs->backing != NULL){
+        nb_ext_max++;
+        if(tmp->bs == bs)
+            bs_ext = nb_ext_max;
+        tmp = tmp->bs->backing;
+    }
+    return nb_ext_max - bs_ext + 1;
+}
 
 #ifdef DEBUG_TIME
     FILE* file_tim2 = NULL;
@@ -334,8 +352,6 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
 #ifdef DEBUG_TIME
     int time_missed = clock();
     int time_hit = time_missed;
-    if(!file_tim2)
-        file_tim2 = fopen(DEBUG_TIME_FILE, "a");
 #endif
 
     assert(offset != 0);
@@ -417,9 +433,24 @@ found:
 #ifdef DEBUG_TIME
     if(c == s->l2_table_cache){
         time_hit = clock() - time_missed - time_hit;
-        fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
-        if(missed)
-            fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+        LogDataTime tmplog1 = {
+            .snap_id = get_indd_bss(bs),
+            .time = time_hit
+        };
+        strcpy(tmplog1.event, "HIT");
+        log_datas[index_log] = tmplog1;
+        index_log++;
+        //fprintf(file_tim2, "HIT;-1;%d\n", time_hit);
+        if(missed){
+            // fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
+            LogDataTime tmplog2 = {
+                .snap_id = get_indd_bss(bs),
+                .time = time_hit
+            };
+            strcpy(tmplog2.event, "MISSED");
+            log_datas[index_log] = tmplog2;
+            index_log++;
+        }
     }
 #endif
 

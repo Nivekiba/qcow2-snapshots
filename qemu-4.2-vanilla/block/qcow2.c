@@ -2162,6 +2162,8 @@ static int get_indd_bs(BlockDriverState* bs){
 #ifdef DEBUG_TIME
     int tim = -1;
     int backing_ind_t = -1;
+    LogDataTime* log_datas;
+    int index_log = 0;
     FILE* file_tim = NULL;
 #endif
 
@@ -2204,9 +2206,20 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         }
 #ifdef DEBUG_TIME
         tim = clock() - tim;
-        fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        //fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        LogDataTime tmplog = {
+            .snap_id = backing_ind_t,
+            .time = tim
+        };
+        strcpy(tmplog.event, "UNALLOCATED_MISSED");
         tim = -1;
-#endif 
+        log_datas[index_log] = tmplog;
+        index_log++;
+        if(index_log > DEBUG_TIME_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
+#endif
         BLKDBG_EVENT(bs->file, BLKDBG_READ_AIO);
         return bdrv_co_preadv_part(s->data_file,
                                    file_cluster_offset + offset_in_cluster,
@@ -2250,6 +2263,8 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
     }
     if(!file_tim)
         file_tim = fopen(DEBUG_TIME_FILE, "a");
+    if(!log_datas)
+        log_datas = (LogDataTime*)calloc(DEBUG_TIME_MAX_NB_ELT, sizeof(LogDataTime));
 #endif
 
     while (bytes != 0 && aio_task_pool_status(aio) == 0) {
@@ -2647,6 +2662,23 @@ static void qcow2_close(BlockDriverState *bs)
 
     cache_clean_timer_del(bs);
     qcow2_cache_destroy(s->l2_table_cache);
+
+#ifdef DEBUG_TIME    
+    int nb_ext = get_indd_bs(bs);
+    if(nb_ext == 0){
+        int ind;
+        if(index_log > DEBUG_TIME_MAX_NB_ELT){
+            fprintf(file_tim, "error\n");
+            index_log = DEBUG_TIME_MAX_NB_ELT;
+        }
+        for(ind = 0; ind < index_log; ind++){
+            fprintf(file_tim, "%s;%d;%d\n", log_datas[ind].event, log_datas[ind].snap_id, log_datas[ind].time);
+        }
+        fclose(file_tim);
+        free(log_datas);
+    }
+#endif
+
     qcow2_cache_destroy(s->refcount_block_cache);
 
     qcrypto_block_free(s->crypto);
