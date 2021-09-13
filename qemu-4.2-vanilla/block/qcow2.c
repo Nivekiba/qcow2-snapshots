@@ -2147,6 +2147,8 @@ BlockDriverState* top_bs;
 static int get_indd_bs(BlockDriverState* bs){
     if(bs->backing == NULL)
         return 0;
+    if(top_bs == NULL)
+        top_bs = bs;
     int bs_ext=0;
     int nb_ext_max=0;
     BdrvChild* tmp = top_bs->backing;

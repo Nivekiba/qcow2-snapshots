@@ -2894,6 +2894,7 @@ static void qcow2_close(BlockDriverState *bs)
             fprintf(file_tim, "error\n");
             index_log = DEBUG_TIME_MAX_NB_ELT;
         }
+        printf("%d\n\n", index_log);
         for(ind = 0; ind < index_log; ind++){
             fprintf(file_tim, "%s;%d;%d\n", log_datas[ind].event, log_datas[ind].snap_id, log_datas[ind].time);
         }
