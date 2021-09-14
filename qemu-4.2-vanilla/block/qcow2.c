@@ -2147,8 +2147,6 @@ BlockDriverState* top_bs;
 static int get_indd_bs(BlockDriverState* bs){
     if(bs->backing == NULL)
         return 0;
-    if(top_bs == NULL)
-        top_bs = bs;
     int bs_ext=0;
     int nb_ext_max=0;
     BdrvChild* tmp = top_bs->backing;
@@ -2254,7 +2252,6 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
     unsigned int cur_bytes; /* number of bytes in current iteration */
     uint64_t cluster_offset = 0;
     AioTaskPool *aio = NULL;
-
 
     if(!top_bs) top_bs = bs;
 
@@ -2666,8 +2663,7 @@ static void qcow2_close(BlockDriverState *bs)
     qcow2_cache_destroy(s->l2_table_cache);
 
 #ifdef DEBUG_TIME    
-    int nb_ext = get_indd_bs(bs);
-    if(nb_ext == 0){
+    if(log_datas){
         int ind;
         if(index_log > DEBUG_TIME_MAX_NB_ELT){
             fprintf(file_tim, "error\n");
@@ -2678,6 +2674,7 @@ static void qcow2_close(BlockDriverState *bs)
         }
         fclose(file_tim);
         free(log_datas);
+        log_datas = NULL;
     }
 #endif
 
