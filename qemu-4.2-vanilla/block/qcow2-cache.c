@@ -438,6 +438,8 @@ found:
             .time = time_hit
         };
         strcpy(tmplog1.event, "HIT");
+        if(missed)
+            strcpy(tmplog1.event, "HIT");
         log_datas[index_log] = tmplog1;
         index_log++;
         //fprintf(file_tim2, "HIT;-1;%d\n", time_hit);

@@ -528,6 +528,20 @@ extern uint64_t *current_l2_slice;
 extern BdrvChild** backing_array;
 extern Qcow2Cache* write_cache;
 
+#define DEBUG_FILE "vanilla_tmp.csv"
+#define DEBUG_MAX_NB_ELT 300000000
+
+typedef struct LogData {
+    char event[20];
+    uint64_t offset;
+    int snap_id;
+    unsigned int l1_index;
+    uint64_t l2_offset;
+} LogData;
+
+extern LogData* log_datas;
+extern int index_log;
+
 static inline uint64_t get_external_snapshot_offset(QCowHeader *header){
     return (header->autoclear_features & QCOW2_EXTERN_SNAPSHOT_OFFSET_MASK) >> 2;
 }

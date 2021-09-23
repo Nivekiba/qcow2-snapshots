@@ -657,7 +657,7 @@ found:
             // fprintf(file_tim2, "MISSED;-1;%d\n", time_missed);
             LogDataTime tmplog2 = {
                 .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
-                .time = time_hit
+                .time = time_missed
             };
             strcpy(tmplog2.event, "MISSED");
             log_datas[index_log] = tmplog2;

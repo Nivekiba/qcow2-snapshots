@@ -2206,7 +2206,6 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         }
 #ifdef DEBUG_TIME
         tim = clock() - tim;
-        //fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
         LogDataTime tmplog = {
             .snap_id = backing_ind_t,
             .time = tim
@@ -2256,14 +2255,15 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
     if(!top_bs) top_bs = bs;
 
 #ifdef DEBUG_TIME
-    if(tim == -1){
-        tim = clock();
-        backing_ind_t = get_indd_bs(bs);
-    }
     if(!file_tim)
         file_tim = fopen(DEBUG_TIME_FILE, "a");
     if(!log_datas)
         log_datas = (LogDataTime*)calloc(DEBUG_TIME_MAX_NB_ELT, sizeof(LogDataTime));
+
+    if(tim == -1){
+        tim = clock();
+        backing_ind_t = get_indd_bs(bs);
+    }
 #endif
 
     while (bytes != 0 && aio_task_pool_status(aio) == 0) {

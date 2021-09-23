@@ -383,17 +383,47 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     i = min_lru_index;
 
     if(!file_stats)
-    file_stats = fopen("stats_events_vanilla.csv", "a");
+    file_stats = fopen(DEBUG_FILE, "a");
     // recuperer les events ici, cached, missed by snapshots
     // event, offset, snapshot_ind
     if(c == s->l2_table_cache){
-        const char st[20] = "CACHE_MISSED";
-        //fprintf(file_stats, "%s;%ld;%d\n", st, offset, get_indd_bs(bs));
-        fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, get_indd_bs(bs), current_l1_index, s->l1_table[current_l1_index] & L1E_OFFSET_MASK);
+        // const char st[20] = "CACHE_MISSED";
+        // fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, get_indd_bs(bs), current_l1_index, s->l1_table[current_l1_index] & L1E_OFFSET_MASK);
+        LogData tmplog = {
+            .snap_id = get_indd_bs(bs),
+            .offset = offset,
+            .l1_index = current_l1_index,
+            .l2_offset = s->l1_table[current_l1_index] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog.event, "CACHE_MISSED");
+        log_datas[index_log] = tmplog;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
     }
 
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
                                         c == s->l2_table_cache, i);
+
+    ////        free cache stats
+    if(c == s->l2_table_cache){
+        LogData tmplog3 = {
+            .snap_id = get_indd_bs(bs),
+            .offset = c->entries[i].offset,
+            .l1_index = current_l1_index,
+            .l2_offset = s->l1_table[current_l1_index] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog3.event, "CACHE_FREE");
+        log_datas[index_log] = tmplog3;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
+    }
+    ////        free cache stats
 
     ret = qcow2_cache_entry_flush(bs, c, i);
     if (ret < 0) {
@@ -428,9 +458,21 @@ found:
 
 
     if(c == s->l2_table_cache){
-        const char stt[20] = "CACHE_REQ";
-        //fprintf(file_stats, "%s;%ld;%d\n", stt, offset, get_indd_bs(bs));
-        fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", stt, offset, get_indd_bs(bs), current_l1_index, s->l1_table[current_l1_index] & L1E_OFFSET_MASK);
+        // const char stt[20] = "CACHE_REQ";
+        // fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", stt, offset, get_indd_bs(bs), current_l1_index, s->l1_table[current_l1_index] & L1E_OFFSET_MASK);
+        LogData tmplog2 = {
+            .snap_id = get_indd_bs(bs),
+            .offset = offset,
+            .l1_index = current_l1_index,
+            .l2_offset = s->l1_table[current_l1_index] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog2.event, "CACHE_REQ");
+        log_datas[index_log] = tmplog2;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
     }
 
     return 0;

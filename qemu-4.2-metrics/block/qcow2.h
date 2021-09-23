@@ -522,6 +522,20 @@ extern unsigned int current_l2_slice_index;
 extern unsigned int current_l1_index;
 extern uint64_t current_virtual_offset;
 
+#define DEBUG_FILE "direct_tmp.csv"
+#define DEBUG_MAX_NB_ELT 50000000
+
+typedef struct LogData {
+    char event[20];
+    uint64_t offset;
+    int snap_id;
+    unsigned int l1_index;
+    uint64_t l2_offset;
+} LogData;
+
+extern LogData* log_datas;
+extern int index_log;
+
 extern bool to_change_cache;
 extern uint64_t *current_l2_slice;
 extern BdrvChild** backing_array;

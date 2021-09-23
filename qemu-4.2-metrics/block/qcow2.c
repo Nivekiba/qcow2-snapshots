@@ -2233,6 +2233,8 @@ static coroutine_fn int qcow2_add_task(BlockDriverState *bs,
 // int ny, nn = 0;
 // int tim = 0;
 FILE* file_stats;
+int index_log;
+LogData* log_datas;
 
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QCow2ClusterType cluster_type,
@@ -2311,15 +2313,30 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         }
 
         if(!file_stats)
-        file_stats = fopen("stats_events.csv", "a");
+        file_stats = fopen(DEBUG_FILE, "a");
+
+        if(!log_datas)
+        log_datas = (LogData*)calloc(DEBUG_MAX_NB_ELT, sizeof(LogData));
         // recuperer les events ici, cached, missed by snapshots
         // event, offset, snapshot_ind
-        const char st[20] = "UNALLOCATED";
+        // const char st[20] = "UNALLOCATED";
         unsigned int l1_ind = offset_to_l1_index(s, offset);
-        fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
-        fflush(file_stats);
-        // nn++;
-        // tim += clock() - time;
+        // fprintf(file_stats, "%s;%ld;%d;%d;%lld\n", st, offset, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
+        
+        LogData tmplog = {
+            .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
+            .offset = offset,
+            .l1_index = l1_ind,
+            .l2_offset = s->l1_table[l1_ind] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog.event, "UNALLOCATED");
+        log_datas[index_log] = tmplog;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
+        
         assert(bs->backing); /* otherwise handled in qcow2_co_preadv_part */
         assert(tmp);
         BLKDBG_EVENT(bs->file, BLKDBG_READ_BACKING_AIO);
@@ -2350,10 +2367,23 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         file_stats = fopen("stats_events.csv", "a");
         // recuperer les events ici, cached, missed by snapshots
         // event, offset, snapshot_ind
-        const char stt[20] = "NORMAL";
+        // const char stt[20] = "NORMAL";
         unsigned int l1_indd = offset_to_l1_index(s, offset);
-        fprintf(file_stats, "%s;%lld;%d;%d;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
-        fflush(file_stats);
+        // fprintf(file_stats, "%s;%lld;%d;%d;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, (int)get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
+
+        LogData tmplog2 = {
+            .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
+            .offset = offset,
+            .l1_index = l1_indd,
+            .l2_offset = s->l1_table[l1_indd] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog2.event, "NORMAL");
+        log_datas[index_log] = tmplog2;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
 
         BdrvChild* tmps = backing_array[checkpoint_entry];
         BlockDriverState* bss = bs;
@@ -2875,6 +2905,21 @@ static void qcow2_close(BlockDriverState *bs)
         // destroy common l2 cache at the last image closure
         qcow2_cache_destroy(s->l2_table_cache);
         qcow2_cache_destroy(write_cache);
+
+        int ind;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            index_log = DEBUG_MAX_NB_ELT;
+        }
+        for(ind = 0; ind < index_log; ind++){
+            fprintf(file_stats, "%s;%ld;%d;%d;%ld\n", 
+                    log_datas[ind].event,
+                    log_datas[ind].offset,
+                    log_datas[ind].snap_id, 
+                    log_datas[ind].l1_index,
+                    log_datas[ind].l2_offset);
+        }
+        fclose(file_stats);
+        free(log_datas);
     }
 
     // if(!!write_cache){

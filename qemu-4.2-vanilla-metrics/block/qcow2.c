@@ -2161,6 +2161,9 @@ static int get_ind_bs(BlockDriverState* bs){
     return nb_ext_max - bs_ext + 1;
 }
 
+int index_log = 0;
+LogData* log_datas;
+
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QCow2ClusterType cluster_type,
                                              uint64_t file_cluster_offset,
@@ -2184,12 +2187,25 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
         assert(bs->backing); /* otherwise handled in qcow2_co_preadv_part */
 
         if(!file_stats)
-        file_stats = fopen("stats_events_vanilla.csv", "a");
+            file_stats = fopen(DEBUG_FILE, "a");
         // recuperer les events ici, cached, missed by snapshots
-        // event, offset, snapshot_ind
-        const char st[20] = "UNALLOCATED";
+        // const char st[20] = "UNALLOCATED";
         unsigned int l1_ind = offset_to_l1_index(s, offset);
-        fprintf(file_stats, "%s;%ld;%d;%ld;%lld\n", st, offset, get_ind_bs(bs), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
+        // fprintf(file_stats, "%s;%ld;%d;%ld;%lld\n", st, offset, get_ind_bs(bs), l1_ind, s->l1_table[l1_ind] & L1E_OFFSET_MASK);
+
+        LogData tmplog = {
+            .snap_id = get_ind_bs(bs),
+            .offset = offset,
+            .l1_index = l1_ind,
+            .l2_offset = s->l1_table[l1_ind] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog.event, "UNALLOCATED");
+        log_datas[index_log] = tmplog;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
 
         BLKDBG_EVENT(bs->file, BLKDBG_READ_BACKING_AIO);
         return bdrv_co_preadv_part(bs->backing, offset, bytes,
@@ -2208,9 +2224,23 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
 
         // recuperer les events ici, cached, missed by snapshots
         // event, offset, snapshot_ind
-        const char stt[20] = "NORMAL";
+        // const char stt[20] = "NORMAL";
         unsigned int l1_indd = offset_to_l1_index(s, offset);
-        fprintf(file_stats, "%s;%lld;%d;%ld;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, get_ind_bs(bs), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
+        // fprintf(file_stats, "%s;%lld;%d;%ld;%lld\n", stt, l2_entry & L2E_OFFSET_MASK, get_ind_bs(bs), l1_indd, s->l1_table[l1_indd] & L1E_OFFSET_MASK);
+
+        LogData tmplog2 = {
+            .snap_id = get_ind_bs(bs),
+            .offset = l2_entry & L2E_OFFSET_MASK,
+            .l1_index = l1_indd,
+            .l2_offset = s->l1_table[l1_indd] & L1E_OFFSET_MASK,
+        };
+        strcpy(tmplog2.event, "NORMAL");
+        log_datas[index_log] = tmplog2;
+        index_log++;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
 
         if (bs->encrypted) {
             return qcow2_co_preadv_encrypted(bs, file_cluster_offset,
@@ -2245,6 +2275,10 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
                                              size_t qiov_offset, int flags)
 {
     BDRVQcow2State *s = bs->opaque;
+
+    if(!log_datas)
+        log_datas = (LogData*)calloc(DEBUG_MAX_NB_ELT, sizeof(LogData));
+    
     int ret = 0;
     unsigned int cur_bytes; /* number of bytes in current iteration */
     uint64_t cluster_offset = 0;
@@ -2646,6 +2680,24 @@ static void qcow2_close(BlockDriverState *bs)
     cache_clean_timer_del(bs);
     qcow2_cache_destroy(s->l2_table_cache);
     qcow2_cache_destroy(s->refcount_block_cache);
+
+    if(log_datas){
+        int ind;
+        if(index_log > DEBUG_MAX_NB_ELT){
+            index_log = DEBUG_MAX_NB_ELT;
+        }
+        for(ind = 0; ind < index_log; ind++){
+            fprintf(file_stats, "%s;%ld;%d;%d;%ld\n", 
+                    log_datas[ind].event,
+                    log_datas[ind].offset,
+                    log_datas[ind].snap_id, 
+                    log_datas[ind].l1_index,
+                    log_datas[ind].l2_offset);
+        }
+        fclose(file_stats);
+        free(log_datas);
+        log_datas = NULL;
+    }
 
     qcrypto_block_free(s->crypto);
     s->crypto = NULL;
