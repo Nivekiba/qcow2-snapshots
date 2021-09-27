@@ -392,6 +392,9 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     bool missed = false;
     // printf("\t\t\t======entering cache=====\n");
 
+    if(!log_datas)
+        log_datas = (LogData*)calloc(DEBUG_MAX_NB_ELT, sizeof(LogData));
+
     // nb_cached++;
     BDRVQcow2State *s = bs->opaque;
     int curr_nb = get_external_nb_snapshot_from_incompat(s->incompatible_features);
