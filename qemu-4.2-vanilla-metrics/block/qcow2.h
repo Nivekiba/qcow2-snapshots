@@ -528,7 +528,7 @@ extern uint64_t *current_l2_slice;
 extern BdrvChild** backing_array;
 extern Qcow2Cache* write_cache;
 
-#define DEBUG_FILE "vanilla_tmp.csv"
+#define DEBUG_FILE "stats_events_vanilla.csv"
 #define DEBUG_MAX_NB_ELT 300000000
 
 typedef struct LogData {

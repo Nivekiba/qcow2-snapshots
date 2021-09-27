@@ -1,11 +1,17 @@
 #!/bin/bash
 
-QEMU_DIR=$1
-ITERATIONS=$2
+QEMU_DIR=$2
+ITERATIONS=$1
+SNAP_DIR=$3
+SNAP_DIR=`realpath $SNAP_DIR`
+
+DISK_DIR=$4
+DISK_DIR=`realpath $DISK_DIR`
+
 
 QEMU=$QEMU_DIR/x86_64-softmmu/qemu-system-x86_64
 
-sudo $QEMU --accel kvm -smp 4 -m 4G -drive file=`realpath snapshot-tests/disk/ub-18.04_50G.qcow2`,format=qcow2,cache=none,l2-cache-size=7M -nographic -nic user,hostfwd=tcp::10022-:22 \
+sudo $QEMU --accel kvm -smp 4 -m 4G -drive file=$DISK_DIR/ub-18.04_50G.qcow2,format=qcow2,cache=none,l2-cache-size=7M -nographic -nic user,hostfwd=tcp::10022-:22 \
     -chardev socket,path=qemu-ga-socket,server,nowait,id=qga0 \
     -device virtio-serial \
     -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \
@@ -20,7 +26,7 @@ sudo arp -d localhost
 bef=`date +%s`
 
 while ! ssh -i keys/id_rsa root@localhost -o StrictHostKeyChecking=no -p 10022 2> /dev/null true; do
-    sleep 30
+    sleep 10
 done;
 
 let spend="`date +%s` - bef"
@@ -37,8 +43,7 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package"
 
 
-rm -rf -- ./snapshot-tests/snapshot-*
-mkdir -p ./snapshot-tests
+rm -rf -- $SNAP_DIR/snapshot-*
 
 i=0
 recordcount=1000000
@@ -78,7 +83,7 @@ timeseries.granularity=2000
     # SLEEP_BETWEEN_ITERATIONS_SEC=$(echo "$recordcount.0 / ($target*$ITERATIONS) + 0.6" | bc -l)
     # sleep $SLEEP_BETWEEN_ITERATIONS_SEC
     sleep 5
-    filename=./snapshot-tests/snapshot-$i
+    filename=$SNAP_DIR/snapshot-$i
     filename=`realpath $filename`
     sudo ./manual-snapshot.sh $filename
 done

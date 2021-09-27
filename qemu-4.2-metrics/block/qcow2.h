@@ -522,7 +522,7 @@ extern unsigned int current_l2_slice_index;
 extern unsigned int current_l1_index;
 extern uint64_t current_virtual_offset;
 
-#define DEBUG_FILE "direct_tmp.csv"
+#define DEBUG_FILE "stats_events.csv"
 #define DEBUG_MAX_NB_ELT 50000000
 
 typedef struct LogData {
