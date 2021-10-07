@@ -430,7 +430,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
             /* retirer la condition sur l'offset
              * et verifier le remplacement de slice
              */
-            if(t->offset == offset && t->l1_index == l1_index && t->start_slice == start_slice){
+            if(t->offset == offset){//} && t->l1_index == l1_index && t->start_slice == start_slice){
                 goto found;
             }
         } else {
@@ -538,16 +538,14 @@ found:
     
     // if(!!c->entries[i].last_bs_req){
     bool modif = false;
-/**
- * creer un tableau a la place de faire des fprintf
- */
-    // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);
-                
-    if(c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
-        
+    // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);  
+    if(c == s->l2_table_cache && !missed){// && !!c->entries[i].last_bs_req){
         BDRVQcow2State* sn = c->entries[i].last_bs_req->opaque;
         int ind_curr_back = get_external_nb_snapshot_from_incompat(s->incompatible_features);
         int ind_prev_back = get_external_nb_snapshot_from_incompat(sn->incompatible_features);
+        // printf("curr %d, prev %d\n", ind_curr_back, ind_prev_back);
+        // printf("qcow2_cache: offset: %ld, %d, %d\n\n", offset, start_slice, l1_index);
+        // printf("index cache: %d\n", i);
         if(ind_curr_back != ind_prev_back){
             // printf("last: %p, curr: %p\n", c->entries[i].last_bs_req, bs);
             // printf("checker: %p\n", c->entries[i].last_bs_req->backing);
@@ -631,7 +629,7 @@ found:
                    
                 if(modif){
                     // printf("\nPrinting comparison\n");
-                    // raise(SIGINT);
+                    //raise(SIGINT);
                 }
                 *table = b;
                 qemu_vfree(buf);

@@ -1013,6 +1013,8 @@ typedef struct Qcow2ReopenState {
 
 Qcow2Cache* tmp_c;
 Qcow2Cache* write_cache;
+uint64_t tmp_l2_cache_size;
+uint64_t tmp_l2_cache_entry_size;
 
 static int qcow2_update_options_prepare(BlockDriverState *bs,
                                         Qcow2ReopenState *r,
@@ -1049,6 +1051,17 @@ static int qcow2_update_options_prepare(BlockDriverState *bs,
         ret = -EINVAL;
         goto fail;
     }
+
+    if(tmp_l2_cache_size == 0) 
+        tmp_l2_cache_size = l2_cache_size;
+    else 
+        l2_cache_size = tmp_l2_cache_size;
+
+    if(tmp_l2_cache_entry_size == 0)
+        tmp_l2_cache_entry_size = l2_cache_entry_size;
+    else
+        l2_cache_entry_size = tmp_l2_cache_entry_size;
+
 
     l2_cache_size /= l2_cache_entry_size;
     if (l2_cache_size < MIN_L2_CACHE_SIZE) {
@@ -1089,9 +1102,11 @@ static int qcow2_update_options_prepare(BlockDriverState *bs,
     }
 
     r->l2_slice_size = l2_cache_entry_size / sizeof(uint64_t);
+    
+    int nbb = get_external_nb_snapshot_from_incompat(s->incompatible_features);
 
     if(tmp_c == NULL){
-        r->l2_table_cache = qcow2_cache_create(bs, l2_cache_size*3,
+        r->l2_table_cache = qcow2_cache_create(bs, l2_cache_size*nbb,
                                            l2_cache_entry_size);
         tmp_c = r->l2_table_cache;
     } else {
@@ -1099,7 +1114,7 @@ static int qcow2_update_options_prepare(BlockDriverState *bs,
     }
 
     if(write_cache == NULL)
-        write_cache = qcow2_cache_create(bs, l2_cache_size*3,
+        write_cache = qcow2_cache_create(bs, l2_cache_size*nbb,
                                            l2_cache_entry_size);
 
     r->refcount_block_cache = qcow2_cache_create(bs, refcount_cache_size,

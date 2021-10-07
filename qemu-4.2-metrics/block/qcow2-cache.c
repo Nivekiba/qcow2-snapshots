@@ -429,7 +429,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
             /* retirer la condition sur l'offset
              * et verifier le remplacement de slice
              */
-            if(t->offset == offset && t->l1_index == l1_index && t->start_slice == start_slice){
+            if(t->offset == offset){//} && t->l1_index == l1_index && t->start_slice == start_slice){
                 goto found;
             }
         } else {
