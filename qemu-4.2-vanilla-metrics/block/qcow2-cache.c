@@ -408,7 +408,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
                                         c == s->l2_table_cache, i);
 
     ////        free cache stats
-    if(c == s->l2_table_cache){
+    if(c == s->l2_table_cache && c->entries[i].offset != 0){
         LogData tmplog3 = {
             .snap_id = get_indd_bs(bs),
             .offset = c->entries[i].offset,

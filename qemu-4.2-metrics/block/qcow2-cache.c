@@ -478,7 +478,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     trace_qcow2_cache_get_replace_entry(qemu_coroutine_self(),
                                         c == s->l2_table_cache, i);
     ////        free cache stats
-    if(c == s->l2_table_cache){
+    if(c == s->l2_table_cache && c->entries[i].offset != 0){
         LogData tmplog3 = {
             .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
             .offset = c->entries[i].offset,
