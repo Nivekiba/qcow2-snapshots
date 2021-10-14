@@ -21,7 +21,11 @@ expect "# "
 send "rm -rf -- ~/ycsb-db || echo Deletion DB\n"
 
 expect "# "
-send "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package && sync\n"
+send "rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:rocksdb-binding -am clean package\n"
+
+
+expect "# "
+send "sync;\n"
 
 expect "# "
 send "shutdown now\n"

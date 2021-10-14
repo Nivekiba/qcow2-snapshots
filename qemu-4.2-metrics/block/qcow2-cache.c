@@ -581,7 +581,25 @@ found:
                 nb_missed_common++;
                 // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);
                 uint64_t* buf = qemu_try_blockalign(bs, (size_t)c->table_size);
-
+///
+                if(c == s->l2_table_cache && l1_index != -1){
+                    // const char st[20] = "CACHE_MISSED";
+                    // fprintf(file_statss, "%s;%ld;%d;%d;%lld\n", st, offset, get_external_nb_snapshot_from_incompat(s->incompatible_features), l1_index, s->l1_table[l1_index] & L1E_OFFSET_MASK);
+                    LogData tmplog_ = {
+                        .snap_id = get_external_nb_snapshot_from_incompat(s->incompatible_features),
+                        .offset = offset,
+                        .l1_index = l1_index,
+                        .l2_offset = s->l1_table[l1_index] & L1E_OFFSET_MASK,
+                    };
+                    strcpy(tmplog_.event, "CACHE_UPDATE");
+                    log_datas[index_log] = tmplog_;
+                    index_log++;
+                    if(index_log > DEBUG_MAX_NB_ELT){
+                        printf("\n\noverflow log index\n\n");
+                        exit(-1);
+                    }
+                }
+///
                 int ret2 = bdrv_pread(bs->file, offset,
                          buf,
                         //  qcow2_cache_get_table_addr(c, i),

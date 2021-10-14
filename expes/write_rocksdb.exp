@@ -22,7 +22,4 @@ expect "# "
 send "cd ~/YCSB && ./bin/ycsb load rocksdb -s -P workloads/workloada -P ~/rocksdb.dat && sync\n"
 
 expect "# "
-send "touch \"`basename $filename`.tmp\"\n"
-
-expect "# "
 send "shutdown now\n"
