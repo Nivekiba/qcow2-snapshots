@@ -33,7 +33,7 @@
 //#define DEBUG_ALLOC
 //#define DEBUG_ALLOC2
 //#define DEBUG_EXT
-//#define DEBUG_TIME
+#define DEBUG_TIME
 #define DEBUG_TIME_FILE "time.csv"
 #define DEBUG_TIME_MAX_NB_ELT 500000000
 
@@ -45,6 +45,7 @@ typedef struct LogDataTime {
 
 extern LogDataTime* log_datas;
 extern int index_log;
+extern bool has_read_file;
 
 #define QCOW_MAGIC (('Q' << 24) | ('F' << 16) | ('I' << 8) | 0xfb)
 

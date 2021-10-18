@@ -2249,6 +2249,7 @@ static coroutine_fn int qcow2_add_task(BlockDriverState *bs,
     LogDataTime* log_datas;
     int index_log = 0;
     FILE* file_tim = NULL;
+    bool has_read_file = false;
 #endif
 
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
@@ -2388,7 +2389,11 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
             .snap_id = backing_ind_t,
             .time = tim
         };
-        strcpy(tmplog.event, "UNALLOCATED_MISSED");
+        if(has_read_file)
+            strcpy(tmplog.event, "UNALLOCATED_MISSED");
+        else
+            strcpy(tmplog.event, "UNALLOCATED_HIT");
+        has_read_file = false;
         tim = -1;
         log_datas[index_log] = tmplog;
         index_log++;
@@ -2464,6 +2469,26 @@ static coroutine_fn int qcow2_co_preadv_part(BlockDriverState *bs,
             ret == QCOW2_CLUSTER_ZERO_ALLOC ||
             (ret == QCOW2_CLUSTER_UNALLOCATED && !bs->backing))
         {
+#ifdef DEBUG_TIME
+        tim = clock() - tim;
+        //fprintf(file_tim, "UNALLOCATED_MISSED;%d;%d\n", backing_ind_t, tim);
+        LogDataTime tmplog = {
+            .snap_id = backing_ind_t,
+            .time = tim
+        };
+        if(has_read_file)
+            strcpy(tmplog.event, "UNALLOCATED_MISSED");
+        else
+            strcpy(tmplog.event, "UNALLOCATED_HIT");
+        has_read_file = false;
+        tim = -1;
+        log_datas[index_log] = tmplog;
+        index_log++;
+        if(index_log > DEBUG_TIME_MAX_NB_ELT){
+            printf("\n\noverflow log index\n\n");
+            exit(-1);
+        }
+#endif  
             qemu_iovec_memset(qiov, qiov_offset, 0, cur_bytes);
         } else {
             if (!aio && cur_bytes != bytes) {

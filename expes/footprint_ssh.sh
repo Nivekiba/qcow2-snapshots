@@ -2,10 +2,11 @@
 
 QEMU_DIR=$1
 image_file=$2
+cache=$3
 
 QEMU=$QEMU_DIR/x86_64-softmmu/qemu-system-x86_64
 
-sudo $QEMU --accel kvm -smp 4 -m 4G -drive file=$image_file,format=qcow2,cache=none,l2-cache-size=7M -nographic -nic user,hostfwd=tcp::10022-:22 \
+sudo $QEMU --accel kvm -smp 4 -m 4G -drive file=$image_file,format=qcow2,cache=none,l2-cache-size=$cache -nographic -nic user,hostfwd=tcp::10022-:22 \
     -chardev socket,path=qemu-ga-socket,server,nowait,id=qga0 \
     -device virtio-serial \
     -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \

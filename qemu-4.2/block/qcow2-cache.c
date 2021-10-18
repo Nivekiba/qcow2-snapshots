@@ -469,6 +469,9 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
     c->entries[i].offset = 0;
 
     if (read_from_disk) {
+#ifdef DEBUG_TIME
+        has_read_file = true;
+#endif
         nb_missed++;
         if (c == s->l2_table_cache) {
             BLKDBG_EVENT(bs->file, BLKDBG_L2_LOAD);
@@ -550,6 +553,9 @@ found:
             // printf("last: %p, curr: %p\n", c->entries[i].last_bs_req, bs);
             // printf("checker: %p\n", c->entries[i].last_bs_req->backing);
             if(read_from_disk){
+#ifdef DEBUG_TIME
+        has_read_file = true;
+#endif
                 nb_missed_common++;
                 // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);
                 uint64_t* buf = qemu_try_blockalign(bs, (size_t)c->table_size);
@@ -640,7 +646,7 @@ found:
     if(c == s->l2_table_cache)
         c->entries[i].last_bs_req = bs;
 
-#ifdef DEBUG_TIME
+#ifdef DEBUG_TIMEx
     if(c == s->l2_table_cache){
         time_hit = clock() - time_missed - time_hit;
         LogDataTime tmplog1 = {

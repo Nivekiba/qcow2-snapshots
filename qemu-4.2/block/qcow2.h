@@ -45,6 +45,7 @@ typedef struct LogDataTime {
 
 extern LogDataTime* log_datas;
 extern int index_log;
+extern bool has_read_file;
 
 #define QCOW_MAGIC (('Q' << 24) | ('F' << 16) | ('I' << 8) | 0xfb)
 

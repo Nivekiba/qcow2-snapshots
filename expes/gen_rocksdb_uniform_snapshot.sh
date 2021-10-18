@@ -41,8 +41,8 @@ while true; do
 rocksdb.dir=$workload_dir
 recordcount=$recordcount
 threadcount=15
-fieldcount=150
-fieldlength=150
+fieldcount=50
+fieldlength=50
 insertstart=$index_current_snap
 insertcount=$count_per_snap
 measurementtype=timeseries

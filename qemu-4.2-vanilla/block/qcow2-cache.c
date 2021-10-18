@@ -403,6 +403,9 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
                                c == s->l2_table_cache, i);
     c->entries[i].offset = 0;
     if (read_from_disk) {
+#ifdef DEBUG_TIME
+        has_read_file = true;
+#endif
         if (c == s->l2_table_cache) {
             BLKDBG_EVENT(bs->file, BLKDBG_L2_LOAD);
         }
@@ -430,7 +433,7 @@ found:
 
     trace_qcow2_cache_get_done(qemu_coroutine_self(),
                                c == s->l2_table_cache, i);
-#ifdef DEBUG_TIME
+#ifdef DEBUG_TIMEx
     if(c == s->l2_table_cache){
         time_hit = clock() - time_missed - time_hit;
         LogDataTime tmplog1 = {
