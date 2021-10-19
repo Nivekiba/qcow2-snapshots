@@ -955,6 +955,9 @@ typedef struct Qcow2ReopenState {
     QCryptoBlockOpenOptions *crypto_opts; /* Disk encryption runtime options */
 } Qcow2ReopenState;
 
+uint64_t tmp_l2_cache_entry_size = 0;
+uint64_t tmp_l2_cache_size = 0;
+
 static int qcow2_update_options_prepare(BlockDriverState *bs,
                                         Qcow2ReopenState *r,
                                         QDict *options, int flags,
@@ -990,6 +993,17 @@ static int qcow2_update_options_prepare(BlockDriverState *bs,
         ret = -EINVAL;
         goto fail;
     }
+
+    if(tmp_l2_cache_size == 0) 
+        tmp_l2_cache_size = l2_cache_size;
+    else 
+        l2_cache_size = tmp_l2_cache_size;
+
+    if(tmp_l2_cache_entry_size == 0)
+        tmp_l2_cache_entry_size = l2_cache_entry_size;
+    else
+        l2_cache_entry_size = tmp_l2_cache_entry_size;
+
 
     l2_cache_size /= l2_cache_entry_size;
     if (l2_cache_size < MIN_L2_CACHE_SIZE) {
