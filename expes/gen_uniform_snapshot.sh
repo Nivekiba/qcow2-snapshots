@@ -23,6 +23,7 @@ sudo rm -f $SNAPSHOTS_DIR/snapshot-*
 
 sudo $QEMU_CMD_DIR/qemu-img create $SNAPSHOTS_DIR/snapshot-1 -b $DISK_DIR/ub-18.04_$disk_size.qcow2 -f qcow2 -F qcow2
 sudo ./write_data.exp $QEMU_CMD_DIR $SNAPSHOTS_DIR/snapshot-1 $megas
+sudo ./write_data.exp $QEMU_CMD_DIR $SNAPSHOTS_DIR/snapshot-1 $megas
 
 i=2
 j=1

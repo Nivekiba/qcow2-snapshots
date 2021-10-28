@@ -2182,6 +2182,116 @@ static int get_indd_bs(BlockDriverState* bs){
     bool has_read_file = false;
 #endif
 
+int time_d = -1;
+
+typedef struct Qcow2CachedTable {
+    int64_t  offset;
+    uint64_t lru_counter;
+    int      ref;
+    bool     dirty;
+} Qcow2CachedTable;
+
+struct Qcow2Cache {
+    Qcow2CachedTable       *entries;
+    struct Qcow2Cache      *depends;
+    int                     size;
+    int                     table_size;
+    bool                    depends_on_flush;
+    void                   *table_array;
+    uint64_t                lru_counter;
+    uint64_t                cache_clean_lru_counter;
+};
+
+typedef struct StrDup {
+    int dup; // nombre de duplicata en tout
+    int nb_dup; // nombre d'elements dupliqués
+} StrDup;
+
+StrDup count(int64_t *a,int n) { 
+    int i,c=0,j;
+    int nb = 0;
+    bool d = false;
+    for(i=0; i<n; i++) {
+        if(a[i]!=-1) {
+            d = true;
+		    for(j=i+1; j<n; j++) {
+        	   if(a[i]==a[j]) {
+                   d = true;
+			       c++;
+			       a[j]=-1;
+		        }
+	       }
+ 		}
+        if(d){
+            nb += 1;
+            d = false;
+        }
+    }
+    StrDup ty = { .dup = c, .nb_dup = nb };
+    return ty; 
+}
+
+typedef struct DupLog{
+    double second;
+    int nb_dup;
+    double taux_dup;
+}DupLog;
+DupLog* arr_dup;
+int indp = 0;
+
+void count_cache(void *threadid) {
+   if(time_d == -1){
+        time_d = clock();
+    } else {
+        int64_t arr[500000] = {0};
+
+        double ecart = 10*(clock() - time_d)/(CLOCKS_PER_SEC);
+        if( ecart >= 50 ) { // test every 0.5 s
+            BdrvChild* tmp = top_bs->backing;
+            int i = 0;
+            do{
+                if(tmp->bs == NULL)
+                    break;
+                BDRVQcow2State* o = tmp->bs->opaque;
+                Qcow2Cache* curr_l2_cache = o->l2_table_cache;
+                int j;
+                for(j=0; j < curr_l2_cache->size; j++){
+                    const Qcow2CachedTable *t = &curr_l2_cache->entries[j];
+                    if(!t->offset)
+                        arr[i++] = t->offset;
+                }
+                tmp = tmp->bs->backing;
+            }while(tmp != NULL);
+
+            // current cache
+            // BDRVQcow2State* s = top_bs->opaque;
+            // Qcow2Cache* curr_l2_cache = s->l2_table_cache;
+            // int j;
+            // for(j=0; j < curr_l2_cache->size; j++){
+            //     const Qcow2CachedTable *t = &curr_l2_cache->entries[j];
+            //     if(!t->offset)
+            //         arr[i++] = t->offset;
+            // }
+
+            // count duplicate entries
+            StrDup nombre = count(arr, i);
+            if(nombre.nb_dup == 0) { nombre.dup = 0; nombre.nb_dup = 1; }
+
+            // FILE* hh = fopen("dupli", "a+");
+            // fprintf(hh, "%f, %d\n", ((float)clock())/CLOCKS_PER_SEC, nombre);
+            // fclose(hh);
+            DupLog tmpdl = {
+                .second = ((float)clock())/CLOCKS_PER_SEC,
+                .nb_dup = nombre.dup,
+                .taux_dup = nombre.dup/nombre.nb_dup
+            };
+            arr_dup[indp++] = tmpdl;
+
+            time_d = clock();
+        }
+    }
+}
+
 static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                                              QCow2ClusterType cluster_type,
                                              uint64_t file_cluster_offset,
@@ -2192,6 +2302,13 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
     BDRVQcow2State *s = bs->opaque;
     int offset_in_cluster = offset_into_cluster(s, offset);
 
+    if(!top_bs){
+        top_bs = bs;
+    }
+    if(!arr_dup){
+        arr_dup = malloc(sizeof(DupLog)*5000000);
+    }
+    count_cache(NULL);
 
     switch (cluster_type) {
     case QCOW2_CLUSTER_ZERO_PLAIN:
@@ -2700,6 +2817,14 @@ static void qcow2_close(BlockDriverState *bs)
     cache_clean_timer_del(bs);
     qcow2_cache_destroy(s->l2_table_cache);
 
+    if(arr_dup){
+        int j;
+        FILE* fh = fopen("dupli.csv", "w");
+        for(j = 0; j < indp; j++){
+            fprintf(fh, "%lg,%d,%f\n", arr_dup[j].second, arr_dup[j].nb_dup, arr_dup[j].taux_dup);
+        }
+        fclose(fh);
+    }
 #ifdef DEBUG_TIME    
     if(log_datas){
         int ind;

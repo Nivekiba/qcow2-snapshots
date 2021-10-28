@@ -20,7 +20,8 @@ for cache in $cache_sizes; do
     echo "$cache vanilla" >> dd_footprint
     cp $path $dirpath/snap
     let cache_per_snap="${cache:0:-1}/$len_chain"
-    sudo ./throughput_ssh.sh ../qemu-4.2-vanilla/build $dirpath/snap $cache
+    cache_per_snap=$cache_per_snap"K"
+    sudo ./throughput_ssh.sh ../qemu-4.2-vanilla/build $dirpath/snap $cache_per_snap
     rm $dirpath/snap
 
     sudo ./clear_ram.sh
