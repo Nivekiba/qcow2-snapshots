@@ -2208,26 +2208,26 @@ typedef struct StrDup {
 } StrDup;
 
 StrDup count(int64_t *a,int n) { 
-    int i,c=0,j;
+    int i,c=0,j,g;
     int nb = 0;
     bool d = false;
     for(i=0; i<n; i++) {
         if(a[i]!=-1) {
-            d = true;
+            g = 0;
 		    for(j=i+1; j<n; j++) {
         	   if(a[i]==a[j]) {
                    d = true;
-			       c++;
+			       g++;
 			       a[j]=-1;
 		        }
 	       }
  		}
         if(d){
-            nb += 1;
+            nb += g;
             d = false;
         }
     }
-    StrDup ty = { .dup = c, .nb_dup = nb };
+    StrDup ty = { .dup = n, .nb_dup = nb };
     return ty; 
 }
 
@@ -2257,21 +2257,21 @@ void count_cache(void *threadid) {
                 int j;
                 for(j=0; j < curr_l2_cache->size; j++){
                     const Qcow2CachedTable *t = &curr_l2_cache->entries[j];
-                    if(!t->offset)
+                    if(t->offset)
                         arr[i++] = t->offset;
                 }
                 tmp = tmp->bs->backing;
             }while(tmp != NULL);
 
             // current cache
-            // BDRVQcow2State* s = top_bs->opaque;
-            // Qcow2Cache* curr_l2_cache = s->l2_table_cache;
-            // int j;
-            // for(j=0; j < curr_l2_cache->size; j++){
-            //     const Qcow2CachedTable *t = &curr_l2_cache->entries[j];
-            //     if(!t->offset)
-            //         arr[i++] = t->offset;
-            // }
+            BDRVQcow2State* s = top_bs->opaque;
+            Qcow2Cache* curr_l2_cache = s->l2_table_cache;
+            int j;
+            for(j=0; j < curr_l2_cache->size; j++){
+                const Qcow2CachedTable *t = &curr_l2_cache->entries[j];
+                if(t->offset)
+                    arr[i++] = t->offset;
+            }
 
             // count duplicate entries
             StrDup nombre = count(arr, i);
@@ -2283,7 +2283,7 @@ void count_cache(void *threadid) {
             DupLog tmpdl = {
                 .second = ((float)clock())/CLOCKS_PER_SEC,
                 .nb_dup = nombre.dup,
-                .taux_dup = nombre.dup/nombre.nb_dup
+                .taux_dup = nombre.nb_dup/nombre.dup
             };
             arr_dup[indp++] = tmpdl;
 
