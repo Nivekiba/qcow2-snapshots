@@ -2246,7 +2246,7 @@ void count_cache(void *threadid) {
         int64_t arr[500000] = {0};
 
         double ecart = 10*(clock() - time_d)/(CLOCKS_PER_SEC);
-        if( ecart >= 50 ) { // test every 0.5 s
+        if( ecart >= 100 ) { // test every 0.5 s
             BdrvChild* tmp = top_bs->backing;
             int i = 0;
             do{
