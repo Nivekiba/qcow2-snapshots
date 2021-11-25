@@ -2283,7 +2283,7 @@ void count_cache(void *threadid) {
             DupLog tmpdl = {
                 .second = ((float)clock())/CLOCKS_PER_SEC,
                 .nb_dup = nombre.dup,
-                .taux_dup = nombre.nb_dup/nombre.dup
+                .taux_dup = (double)nombre.nb_dup/nombre.dup
             };
             arr_dup[indp++] = tmpdl;
 
@@ -2305,10 +2305,10 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
     if(!top_bs){
         top_bs = bs;
     }
-    if(!arr_dup){
-        arr_dup = malloc(sizeof(DupLog)*5000000);
-    }
-    count_cache(NULL);
+    // if(!arr_dup){
+    //     arr_dup = malloc(sizeof(DupLog)*5000000);
+    // }
+    // count_cache(NULL);
 
     switch (cluster_type) {
     case QCOW2_CLUSTER_ZERO_PLAIN:

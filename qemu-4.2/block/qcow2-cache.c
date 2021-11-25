@@ -189,6 +189,8 @@ static int qcow2_cache_flush_dependency(BlockDriverState *bs, Qcow2Cache *c)
     return 0;
 }
 
+BlockDriverState *top_bss;
+
 static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
 {
     BDRVQcow2State *s = bs->opaque;
@@ -200,7 +202,9 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
 
     trace_qcow2_cache_entry_flush(qemu_coroutine_self(),
                                   c == s->l2_table_cache, i);
-
+    if(!top_bss)
+        top_bss = bs;
+    printf("%p\n", top_bss);
     if (c->depends) {
         ret = qcow2_cache_flush_dependency(bs, c);
     } else if (c->depends_on_flush) {
@@ -243,7 +247,9 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
         }
     }
     
-    if(c == s->l2_table_cache){
+    if(c == s->l2_table_cache
+    && get_external_nb_snapshot_from_incompat(s->incompatible_features) == nb_ext_maxi
+    ){
 
         if(write_cache->entries[i].offset == 0){
             ret = bdrv_pwrite(bs->file, c->entries[i].offset,
@@ -270,6 +276,12 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
                     l2 == 0
                 )
                 {
+                    // if(get_external_nb_snapshot_from_incompat(s->incompatible_features) < 10) {
+                    //     printf("==> %d, %d\n", get_external_nb_snapshot_from_incompat(s->incompatible_features), nb_ext_maxi);
+                    //     printf("%lx, %lx\n", l1, l2);
+                    //     //raise(SIGINT);
+                    //     continue;
+                    // }
                     // printf("%4d- flushing %lx, %lx\n", k, l1, l2);
                     // FILE* f = fopen("logger", "a");
                     // fprintf(f, "flushing - %lx - %lx - %d - %d\n", l1, l2, k, i);
@@ -542,14 +554,14 @@ found:
     // if(!!c->entries[i].last_bs_req){
     bool modif = false;
     // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);  
-    if(c == s->l2_table_cache && !missed){// && !!c->entries[i].last_bs_req){
+    if(c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
         BDRVQcow2State* sn = c->entries[i].last_bs_req->opaque;
         int ind_curr_back = get_external_nb_snapshot_from_incompat(s->incompatible_features);
         int ind_prev_back = get_external_nb_snapshot_from_incompat(sn->incompatible_features);
         // printf("curr %d, prev %d\n", ind_curr_back, ind_prev_back);
         // printf("qcow2_cache: offset: %ld, %d, %d\n\n", offset, start_slice, l1_index);
         // printf("index cache: %d\n", i);
-        if(ind_curr_back != ind_prev_back){
+        if(ind_curr_back != ind_prev_back || true){
             // printf("last: %p, curr: %p\n", c->entries[i].last_bs_req, bs);
             // printf("checker: %p\n", c->entries[i].last_bs_req->backing);
             if(read_from_disk){
@@ -635,7 +647,7 @@ found:
                    
                 if(modif){
                     // printf("\nPrinting comparison\n");
-                    //raise(SIGINT);
+                    // raise(SIGINT);
                 }
                 *table = b;
                 qemu_vfree(buf);

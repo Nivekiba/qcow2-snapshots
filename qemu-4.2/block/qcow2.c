@@ -2281,10 +2281,10 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
     }
     // printf("cluster type: %d\n", cluster_type);
     l2_entry = be64_to_cpu(current_l2_slice[current_l2_slice_index]);
-    if(cluster_type == QCOW2_CLUSTER_UNALLOCATED || 
-        get_l2_entry_backing_idx(&l2_entry) < nb_ext) {
-            cluster_type = QCOW2_CLUSTER_UNALLOCATED;
-    }
+    // if(cluster_type == QCOW2_CLUSTER_UNALLOCATED || 
+    //     get_l2_entry_backing_idx(&l2_entry) < nb_ext) {
+    //         cluster_type = QCOW2_CLUSTER_UNALLOCATED;
+    // }
 
     switch (cluster_type) {
     case QCOW2_CLUSTER_ZERO_PLAIN:
