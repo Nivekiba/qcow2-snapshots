@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.17)  12 OCT 2021 12:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.3.17)  23 NOV 2021 15:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -741,11 +741,7 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count309
 \l__pdf_internal_box=\box53
 )
-(./current.aux
-
-LaTeX Warning: Label `fig:fig36' multiply defined.
-
-)
+(./current.aux)
 \openout1 = `current.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/nxlmi/m/it on input line 6.
@@ -947,18 +943,18 @@ LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 10.0pt on input line 7.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/n' will be
 (Font)              scaled to size 12.0pt on input line 7.
-<clusters_accesses_chain_50.pdf, id=7, 409.55824pt x 263.16693pt>
+<clusters_accesses_chain_50.pdf, id=7, 384.02534pt x 265.5869pt>
 File: clusters_accesses_chain_50.pdf Graphic file (type pdf)
 <use clusters_accesses_chain_50.pdf>
 Package pdftex.def Info: clusters_accesses_chain_50.pdf  used on input line 17.
 
-(pdftex.def)             Requested size: 227.64894pt x 146.28023pt.
-<clusters_accesses_chain_500.pdf, id=8, 409.55824pt x 263.16693pt>
+(pdftex.def)             Requested size: 227.64894pt x 157.44057pt.
+<clusters_accesses_chain_500.pdf, id=8, 384.02534pt x 265.58107pt>
 File: clusters_accesses_chain_500.pdf Graphic file (type pdf)
 <use clusters_accesses_chain_500.pdf>
 Package pdftex.def Info: clusters_accesses_chain_500.pdf  used on input line 18
 .
-(pdftex.def)             Requested size: 227.64894pt x 146.28023pt.
+(pdftex.def)             Requested size: 227.64894pt x 157.43712pt.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/sc' will be
 (Font)              scaled to size 10.0pt on input line 19.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/sc' will be
@@ -990,7 +986,7 @@ pdfTeX warning: /usr/bin/pdflatex (file ./clusters_accesses_chain_500.pdf): PDF
 pdfTeX warning: /usr/bin/pdflatex (file ./number_events_per_chain_va.pdf): PDF 
 inclusion: multiple pdfs with page group included in a single page
 >]
-<number_events_per_chain_di.pdf, id=119, 483.78554pt x 355.79283pt>
+<number_events_per_chain_di.pdf, id=127, 483.78554pt x 355.79283pt>
 File: number_events_per_chain_di.pdf Graphic file (type pdf)
 <use number_events_per_chain_di.pdf>
 Package pdftex.def Info: number_events_per_chain_di.pdf  used on input line 45.
@@ -1000,12 +996,12 @@ Package pdftex.def Info: number_events_per_chain_di.pdf  used on input line 45.
 
 Class acmart Warning: A possible image without description on input line 48.
 
-<memory_consumption.pdf, id=120, 494.35628pt x 333.99153pt>
+<memory_consumption.pdf, id=128, 494.35628pt x 333.99153pt>
 File: memory_consumption.pdf Graphic file (type pdf)
 <use memory_consumption.pdf>
 Package pdftex.def Info: memory_consumption.pdf  used on input line 57.
 (pdftex.def)             Requested size: 227.64894pt x 153.80104pt.
-<workload_dd_throughput.pdf, id=121, 487.97305pt x 333.99153pt>
+<workload_dd_throughput.pdf, id=129, 487.97305pt x 333.99153pt>
 File: workload_dd_throughput.pdf Graphic file (type pdf)
 <use workload_dd_throughput.pdf>
 Package pdftex.def Info: workload_dd_throughput.pdf  used on input line 58.
@@ -1013,7 +1009,7 @@ Package pdftex.def Info: workload_dd_throughput.pdf  used on input line 58.
 
 Class acmart Warning: A possible image without description on input line 61.
 
-<startup_duration.pdf, id=122, 403.17502pt x 263.16693pt>
+<startup_duration.pdf, id=130, 403.17502pt x 263.16693pt>
 File: startup_duration.pdf Graphic file (type pdf)
 <use startup_duration.pdf>
 Package pdftex.def Info: startup_duration.pdf  used on input line 69.
@@ -1024,23 +1020,20 @@ Class acmart Warning: A possible image without description on input line 72.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Class acmart Warning: Some images may lack descriptions.
-
 LaTeX Font Info:    Trying to load font information for T1+LinuxBiolinumT-TLF o
-n input line 74.
+n input line 77.
 (/usr/share/texlive/texmf-dist/tex/latex/libertine/T1LinuxBiolinumT-TLF.fd
 File: T1LinuxBiolinumT-TLF.fd 2017/03/20 (autoinst) Font definitions for T1/Lin
 uxBiolinumT-TLF.
 )
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 74.
+(Font)              scaled to size 10.0pt on input line 77.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `LinuxBiolinumT-TLF' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 8.0pt on input line 74.
+(Font)              scaled to size 8.0pt on input line 77.
 
 [2.2 <./number_events_per_chain_di.pdf> <./memory_consumption.pdf
 
@@ -1051,51 +1044,155 @@ n: multiple pdfs with page group included in a single page
 pdfTeX warning: /usr/bin/pdflatex (file ./workload_dd_throughput.pdf): PDF incl
 usion: multiple pdfs with page group included in a single page
 >]
+LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/b/it' will be
+(Font)              scaled to size 10.0pt on input line 80.
+<MISSED_time_hdd.pdf, id=249, 397.12115pt x 249.44379pt>
+File: MISSED_time_hdd.pdf Graphic file (type pdf)
+<use MISSED_time_hdd.pdf>
+Package pdftex.def Info: MISSED_time_hdd.pdf  used on input line 83.
+(pdftex.def)             Requested size: 227.64894pt x 142.99515pt.
+<MISSED_time_ssd.pdf, id=250, 397.12115pt x 249.44379pt>
+File: MISSED_time_ssd.pdf Graphic file (type pdf)
+<use MISSED_time_ssd.pdf>
+Package pdftex.def Info: MISSED_time_ssd.pdf  used on input line 84.
+(pdftex.def)             Requested size: 227.64894pt x 142.99515pt.
+
+
+Class acmart Warning: A possible image without description on input line 87.
+
+<HIT_time_hdd.pdf, id=251, 390.73793pt x 249.44379pt>
+File: HIT_time_hdd.pdf Graphic file (type pdf)
+<use HIT_time_hdd.pdf>
+Package pdftex.def Info: HIT_time_hdd.pdf  used on input line 99.
+(pdftex.def)             Requested size: 227.64894pt x 145.32835pt.
+<HIT_time_ssd.pdf, id=252, 390.73793pt x 249.44379pt>
+File: HIT_time_ssd.pdf Graphic file (type pdf)
+<use HIT_time_ssd.pdf>
+Package pdftex.def Info: HIT_time_ssd.pdf  used on input line 100.
+(pdftex.def)             Requested size: 227.64894pt x 145.32835pt.
+
+Class acmart Warning: A possible image without description on input line 103.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 10.0pt on input line 105.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `LinuxLibertineT-TLF' (encoding: OT1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
+(Font)              scaled to size 7.3pt on input line 105.
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
+File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
+File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
+)
 ! Undefined control sequence.
 \f@nch@olh ...necountL \@headfootfont \shorttitle 
                                                   \strut 
-l.74 \end{document}
-                   
+l.108 	
+       
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-[3.3 <./startup_duration.pdf>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 74.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 74.
+[3.3 <./startup_duration.pdf> <./MISSED_time_hdd.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./MISSED_time_hdd.pdf): PDF inclusion: 
+multiple pdfs with page group included in a single page
+> <./MISSED_time_ssd.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./MISSED_time_ssd.pdf): PDF inclusion: 
+multiple pdfs with page group included in a single page
+>]
+<cache_variation.pdf, id=367, 396.7918pt x 249.44379pt>
+File: cache_variation.pdf Graphic file (type pdf)
+<use cache_variation.pdf>
+Package pdftex.def Info: cache_variation.pdf  used on input line 116.
+(pdftex.def)             Requested size: 227.64894pt x 143.11314pt.
+
+
+Class acmart Warning: A possible image without description on input line 119.
+
+<dupli_memory.pdf, id=368, 390.40857pt x 266.97804pt>
+File: dupli_memory.pdf Graphic file (type pdf)
+<use dupli_memory.pdf>
+Package pdftex.def Info: dupli_memory.pdf  used on input line 133.
+(pdftex.def)             Requested size: 227.64894pt x 155.67433pt.
+
+Class acmart Warning: A possible image without description on input line 136.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Class acmart Warning: Some images may lack descriptions.
+
+
+Class acmart Warning: ACM keywords are mandatory for papers over two pages.
+
+
+Class acmart Warning: CCS concepts are mandatory for papers over two pages.
+
+[4.4 <./HIT_time_hdd.pdf> <./HIT_time_ssd.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./HIT_time_ssd.pdf): PDF inclusion: mul
+tiple pdfs with page group included in a single page
+> <./cache_variation.pdf
+
+pdfTeX warning: /usr/bin/pdflatex (file ./cache_variation.pdf): PDF inclusion: 
+multiple pdfs with page group included in a single page
+>]
+! Undefined control sequence.
+\f@nch@olh ...necountL \@headfootfont \shorttitle 
+                                                  \strut 
+l.138 \end{document}
+                    
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[5.5 <./dupli_memory.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 138.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 138.
  (./current.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 74.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 74.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 138.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 138.
 Package rerunfilecheck Info: File `current.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
  ) 
 Here is how much of TeX's memory you used:
- 19497 strings out of 481239
- 290197 string characters out of 5920377
- 594778 words of memory out of 5000000
- 34177 multiletter control sequences out of 15000+600000
- 601378 words of font info for 102 fonts, out of 8000000 for 9000
+ 19705 strings out of 481239
+ 294692 string characters out of 5920377
+ 596778 words of memory out of 5000000
+ 34293 multiletter control sequences out of 15000+600000
+ 622211 words of font info for 159 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  63i,11n,100p,825b,504s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{/us
-r/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/shar
-e/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_tlukpt.enc}{/usr/share/texl
-ive/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}{/usr/share/texlive/te
-xmf-dist/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}</usr/share/texlive/texmf-di
-st/fonts/type1/public/libertine/LinBiolinumT.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/libertine/LinLibertineT.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/libertine/LinLibertineTB.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/libertine/LinLibertineTI.pfb>
-Output written on current.pdf (3 pages, 343680 bytes).
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_ki75ao.enc}{/us
+r/share/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc}{/usr/shar
+e/texlive/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc}{/usr/share/texl
+ive/texmf-dist/fonts/enc/dvips/libertine/lbtn_tlukpt.enc}{/usr/share/texlive/te
+xmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc}{/usr/share/texlive/texmf-di
+st/fonts/enc/dvips/libertine/lbtn_nh77jq.enc}</usr/share/texlive/texmf-dist/fon
+ts/type1/public/newtx/LibertineMathMI.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/libertine/LinBiolinumT.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/libertine/LinLibertineT.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/libertine/LinLibertineTB.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/libertine/LinLibertineTBI.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/libertine/LinLibertineTI.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/newtx/NewTXMI.pfb>
+Output written on current.pdf (5 pages, 478428 bytes).
 PDF statistics:
- 313 PDF objects out of 1000 (max. 8388607)
- 84 compressed objects within 1 object stream
- 13 named destinations out of 1000 (max. 500000)
- 18480 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 566 PDF objects out of 1000 (max. 8388607)
+ 158 compressed objects within 2 object streams
+ 24 named destinations out of 1000 (max. 500000)
+ 22094 words of extra memory for PDF output out of 24883 (max. 10000000)
 

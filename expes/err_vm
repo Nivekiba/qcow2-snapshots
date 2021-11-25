@@ -1,0 +1,1 @@
+qcow2: Image is corrupt: Preventing invalid write on metadata (overlaps with refcount block); further non-fatal corruption events will be suppressed

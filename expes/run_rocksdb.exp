@@ -8,7 +8,7 @@ set file_config_str [lindex $argv 4]
 
 set timeout -1
 
-spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 -nographic --accel kvm -m 4G -drive file=$filename,format=qcow2,cache=none,l2-cache-size=$cache -nographic
+spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 --accel kvm -m 4G -drive file=$filename,format=qcow2,cache=none,l2-cache-size=$cache -nographic
 
 
 expect "login: "

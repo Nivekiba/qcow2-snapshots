@@ -1,0 +1,27 @@
+#!/usr/bin/expect -f
+
+set qemu_dir [lindex $argv 0]
+set filename [lindex $argv 1]
+set cache   [lindex $argv 2]
+
+set timeout -1
+
+spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 --accel kvm -m 4G -drive file=$filename,format=qcow2,l2-cache-size=$cache,cache=none -nographic
+
+expect "login: "
+send "root\n"
+
+expect "Password: "
+send "a\n"
+
+expect "# "
+send "ls\n"
+
+expect "# " 
+send "echo 3 > /proc/sys/vm/drop_caches\n"
+
+expect "# "
+send "fio --filename=/dev/sda --direct=1 --percentage_random=70  --rw=randread --randrepeat=1 --ioengine=libaio --bs=4k --iodepth=32 --numjobs=1 --size=50G --name=randread.4k.out --runtime=180\n"
+
+expect "# "
+send "shutdown -h now\n"
