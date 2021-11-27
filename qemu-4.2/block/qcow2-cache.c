@@ -204,7 +204,8 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
                                   c == s->l2_table_cache, i);
     if(!top_bss)
         top_bss = bs;
-    printf("%p\n", top_bss);
+    if(c == s->l2_table_cache)
+    printf("%p, %p\n", c, c->depends);
     if (c->depends) {
         ret = qcow2_cache_flush_dependency(bs, c);
     } else if (c->depends_on_flush) {
@@ -247,9 +248,7 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
         }
     }
     
-    if(c == s->l2_table_cache
-    && get_external_nb_snapshot_from_incompat(s->incompatible_features) == nb_ext_maxi
-    ){
+    if(c == s->l2_table_cache){
 
         if(write_cache->entries[i].offset == 0){
             ret = bdrv_pwrite(bs->file, c->entries[i].offset,
@@ -561,7 +560,7 @@ found:
         // printf("curr %d, prev %d\n", ind_curr_back, ind_prev_back);
         // printf("qcow2_cache: offset: %ld, %d, %d\n\n", offset, start_slice, l1_index);
         // printf("index cache: %d\n", i);
-        if(ind_curr_back != ind_prev_back || true){
+        if(ind_curr_back != ind_prev_back){
             // printf("last: %p, curr: %p\n", c->entries[i].last_bs_req, bs);
             // printf("checker: %p\n", c->entries[i].last_bs_req->backing);
             if(read_from_disk){

@@ -1,0 +1,7 @@
+probe process("/home/nivek/Workspace/qcow2-snapshots/qemu-4.2/build/x86_64-softmmu/qemu-system-x86_64").function("qcow2_signal_corruption").call {
+	print_ubacktrace()
+}
+
+probe end {
+    printf("e\n");
+}
