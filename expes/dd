@@ -2,34 +2,32 @@ Warning: Permanently added '[localhost]:10022' (ECDSA) to the list of known host
 randread.4k.out: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=libaio, iodepth=32
 fio-3.1
 Starting 1 process
-fio: io_u error on file /dev/sda: Input/output error: read offset=44402466816, buflen=4096
-fio: pid=505, err=5/file:io_u.c:1756, func=io_u error, error=Input/output error
 
-randread.4k.out: (groupid=0, jobs=1): err= 5 (file:io_u.c:1756, func=io_u error, error=Input/output error): pid=505: Sat Nov 27 14:37:27 2021
-   read: IOPS=3781, BW=14.8MiB/s (15.5MB/s)(321MiB/21744msec)
-    slat (usec): min=2, max=510, avg= 9.42, stdev=21.79
-    clat (usec): min=439, max=391035, avg=8441.21, stdev=8664.79
-     lat (usec): min=444, max=391041, avg=8451.63, stdev=8664.88
+randread.4k.out: (groupid=0, jobs=1): err= 0: pid=596: Sat Nov 27 22:10:17 2021
+   read: IOPS=3387, BW=13.2MiB/s (13.9MB/s)(2382MiB/180009msec)
+    slat (usec): min=2, max=697, avg= 6.47, stdev= 2.24
+    clat (usec): min=585, max=72667, avg=9433.68, stdev=5155.54
+     lat (usec): min=593, max=72673, avg=9441.16, stdev=5155.59
     clat percentiles (usec):
-     |  1.00th=[   979],  5.00th=[  1516], 10.00th=[  2245], 20.00th=[  3720],
-     | 30.00th=[  5211], 40.00th=[  6652], 50.00th=[  8160], 60.00th=[  9634],
-     | 70.00th=[ 11076], 80.00th=[ 12518], 90.00th=[ 14353], 95.00th=[ 15795],
-     | 99.00th=[ 18220], 99.50th=[ 19006], 99.90th=[ 39584], 99.95th=[ 58459],
-     | 99.99th=[387974]
-   bw (  KiB/s): min=11104, max=16200, per=100.00%, avg=15289.70, stdev=912.77, samples=43
-   iops        : min= 2776, max= 4050, avg=3822.42, stdev=228.19, samples=43
-  lat (usec)   : 500=0.01%, 750=0.15%, 1000=0.98%
-  lat (msec)   : 2=7.03%, 4=13.87%, 10=40.64%, 20=37.05%, 50=0.18%
-  lat (msec)   : 100=0.05%, 500=0.04%
-  cpu          : usr=6.74%, sys=24.18%, ctx=54687, majf=0, minf=51
+     |  1.00th=[ 1139],  5.00th=[ 1729], 10.00th=[ 2573], 20.00th=[ 4228],
+     | 30.00th=[ 5932], 40.00th=[ 7635], 50.00th=[ 9241], 60.00th=[10945],
+     | 70.00th=[12649], 80.00th=[14353], 90.00th=[16319], 95.00th=[17957],
+     | 99.00th=[20317], 99.50th=[21365], 99.90th=[23725], 99.95th=[25822],
+     | 99.99th=[61604]
+   bw (  KiB/s): min=10456, max=15024, per=100.00%, avg=13562.08, stdev=467.35, samples=360
+   iops        : min= 2614, max= 3756, avg=3390.29, stdev=116.83, samples=360
+  lat (usec)   : 750=0.01%, 1000=0.16%
+  lat (msec)   : 2=6.54%, 4=11.83%, 10=35.90%, 20=44.20%, 50=1.35%
+  lat (msec)   : 100=0.02%
+  cpu          : usr=10.99%, sys=19.35%, ctx=431743, majf=0, minf=42
   IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=100.0%, >=64=0.0%
      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
-     complete  : 0=0.1%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.1%, 64=0.0%, >=64=0.0%
-     issued rwt: total=82218,0,0, short=0,0,0, dropped=0,0,0
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.1%, 64=0.0%, >=64=0.0%
+     issued rwt: total=609864,0,0, short=0,0,0, dropped=0,0,0
      latency   : target=0, window=0, percentile=100.00%, depth=32
 
 Run status group 0 (all jobs):
-   READ: bw=14.8MiB/s (15.5MB/s), 14.8MiB/s-14.8MiB/s (15.5MB/s-15.5MB/s), io=321MiB (337MB), run=21744-21744msec
+   READ: bw=13.2MiB/s (13.9MB/s), 13.2MiB/s-13.2MiB/s (13.9MB/s-13.9MB/s), io=2382MiB (2498MB), run=180009-180009msec
 
 Disk stats (read/write):
-  sda: ios=58213/257, merge=23999/19, ticks=482824/4364, in_queue=488864, util=99.57%
+  sda: ios=431121/429, merge=178793/333, ticks=4059984/1172216, in_queue=5232148, util=99.98%

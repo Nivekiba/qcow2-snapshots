@@ -118,7 +118,6 @@ void qcow2_cache_clean_unused(Qcow2Cache *c)
         while (i < c->size && can_clean_entry(c, i)) {
             c->entries[i].offset = 0;
             c->entries[i].lru_counter = 0;
-            c->entries[i].last_bs_req = NULL;
             i++;
             to_clean++;
         }
@@ -200,12 +199,14 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
         return 0;
     }
 
+    if(get_external_nb_snapshot_from_incompat(s->incompatible_features) < nb_ext_maxi)
+        return 0;
+
     trace_qcow2_cache_entry_flush(qemu_coroutine_self(),
                                   c == s->l2_table_cache, i);
     if(!top_bss)
         top_bss = bs;
-    if(c == s->l2_table_cache)
-    printf("%p, %p\n", c, c->depends);
+
     if (c->depends) {
         ret = qcow2_cache_flush_dependency(bs, c);
     } else if (c->depends_on_flush) {
@@ -613,13 +614,13 @@ found:
                          get_l2_entry_backing_idx(&aa) >= get_l2_entry_backing_idx(&bb))
                     ){
                         // printf(
-                        //         "%4d- comparison: %lx, %lx(aatype: %d, bbtype: %d)\t %ld\n",
+                        //         "%4d- comparison: %lx, %lx(aatype: %d, bbtype: %d)\t %ld, bs ind: %d\n",
                         //         y,
                         //         aa,
                         //         bb,
                         //         qcow2_get_cluster_type(bs, aa),
                         //         qcow2_get_cluster_type(bs, bb)
-                        //         , offset);
+                        //         , offset, ind_prev_back);
                         b[y] = a[y];
                         modif = true;
                     }
@@ -632,15 +633,6 @@ found:
                     //             qcow2_get_cluster_type(bs, aa),
                     //             qcow2_get_cluster_type(bs, bb)
                     //             , offset);
-                    //     // if(i == 29)
-                    //     // fprintf(ff, 
-                    //     //     "??? %4d- comparison: %lx, %lx(aatype: %d, bbtype: %d)\t %ld\n",
-                    //     //     y,
-                    //     //     aa,
-                    //     //     bb,
-                    //     //     qcow2_get_cluster_type(bs, aa),
-                    //     //     qcow2_get_cluster_type(bs, bb)
-                    //     //     , offset);
                     // }
                 }
                    
