@@ -23,4 +23,4 @@ while true; do
 	sudo ./get_wss.sh >> /tmp/mem
 done
 
-tail -3 /tmp/mem > memory_footprint
+tail -3 /tmp/mem >> memory_footprint

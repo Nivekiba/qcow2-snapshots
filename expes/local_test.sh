@@ -7,8 +7,8 @@
 
 ./clear_ram.sh
 cp disk/chain-100-r/snapshot-5 disk/chain-100-r/bsnap
-#./throughput_ssh.sh ../qemu-4.2/build disk/chain-100-r/bsnap 1M
-./launch_rocksdb.sh ../qemu-4.2/build/ disk/chain-100-r/bsnap
+./throughput_ssh.sh ../qemu-4.2/build disk/chain-100-r/bsnap 1M
+#./launch_rocksdb.sh ../qemu-4.2/build/ disk/chain-100-r/bsnap
 #./rocksdb_footprint.sh ../qemu-4.2/build disk/chain-100-r/bsnap 1792K
 
 #./clear_ram.sh
