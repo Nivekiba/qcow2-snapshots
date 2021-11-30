@@ -27,8 +27,18 @@ done;
 let spend="`date +%s` - bef"
 echo "time spend to gain ssh service: "$spend
 
+rocks_config="
+rocksdb.dir=/root/ycsb-db
+operationcount=500000
+measurementtype=timeseries
+timeseries.granularity=2000
+"
+
 ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
-    -i ./keys/id_rsa root@localhost -p 10022 'dd if=/dev/sda of=/dev/null bs=1M status=progress && rm -rf ~/.ssh/known_hosts' >& dd
+    -i ./keys/id_rsa root@localhost -p 10022 "echo '$rocks_config' >> ~/rocksdb.dat sync"
+
+ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+    -i ./keys/id_rsa root@localhost -p 10022 'cd ~/YCSB && ./bin/ycsb run rocksdb -s -P workloads/workloadc -P ~/rocksdb.dat && sync' >& dd
 
 cat dd | tail -1 | cut -d "," -f 4 >> dd_footprint
 
@@ -38,6 +48,3 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 'shutdown now'
 
 wait $QEMU_ID
-#kill -9 $QEMU_ID || echo "nothing killed"
-
-sleep 15
