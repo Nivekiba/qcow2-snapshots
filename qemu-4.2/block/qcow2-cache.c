@@ -554,14 +554,14 @@ found:
     // if(!!c->entries[i].last_bs_req){
     bool modif = false;
     // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);  
-    if(false && c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
+    if(c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
         BDRVQcow2State* sn = c->entries[i].last_bs_req->opaque;
         int ind_curr_back = get_external_nb_snapshot_from_incompat(s->incompatible_features);
         int ind_prev_back = get_external_nb_snapshot_from_incompat(sn->incompatible_features);
         // printf("curr %d, prev %d\n", ind_curr_back, ind_prev_back);
         // printf("qcow2_cache: offset: %ld, %d, %d\n\n", offset, start_slice, l1_index);
         // printf("index cache: %d\n", i);
-        if(ind_curr_back != ind_prev_back){
+        if(ind_curr_back != ind_prev_back || true){
             // printf("last: %p, curr: %p\n", c->entries[i].last_bs_req, bs);
             // printf("checker: %p\n", c->entries[i].last_bs_req->backing);
             if(read_from_disk){
