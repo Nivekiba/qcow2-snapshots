@@ -7,7 +7,7 @@ DISK_DIR=$4
 disk_size=$5
 
 
-let megas="(${disk_size:0:-1}-9)*1024/$SNAPSHOTS"
+let megas="(${disk_size:0:-1}-19)*1024/$SNAPSHOTS"
 
 
 

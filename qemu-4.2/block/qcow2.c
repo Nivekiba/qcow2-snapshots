@@ -3990,7 +3990,7 @@ qcow2_co_create(BlockdevCreateOptions *create_options, Error **errp)
                 if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) != 0 )
                     printf("before %lx => ", l2_slice[j]);
 
-                l2_slice[j] =  (l2_slice[j] & ~L2E_OFFSET_MASK);// & ~(1ULL<<63);
+                // l2_slice[j] =  (l2_slice[j] & ~L2E_OFFSET_MASK);// & ~(1ULL<<63);
 
                 if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) == 0x1fe )
                     l2_slice[j] = 1ULL<<63;

@@ -438,7 +438,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
         // if (t->offset == offset) {
         //     goto found;
         // }
-        if(c == s->l2_table_cache){
+        if(false && c == s->l2_table_cache){
             /* retirer la condition sur l'offset
              * et verifier le remplacement de slice
              */
@@ -554,7 +554,7 @@ found:
     // if(!!c->entries[i].last_bs_req){
     bool modif = false;
     // printf("%d, %d, %d\n", nb_missed_common, nb_missed, missed);  
-    if(c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
+    if(false && c == s->l2_table_cache && !missed){//} && !!c->entries[i].last_bs_req){
         BDRVQcow2State* sn = c->entries[i].last_bs_req->opaque;
         int ind_curr_back = get_external_nb_snapshot_from_incompat(s->incompatible_features);
         int ind_prev_back = get_external_nb_snapshot_from_incompat(sn->incompatible_features);
