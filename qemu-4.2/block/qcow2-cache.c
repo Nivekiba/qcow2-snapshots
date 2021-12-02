@@ -241,15 +241,15 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
         BLKDBG_EVENT(bs->file, BLKDBG_L2_UPDATE);
     }
 
-    //if(c == s->refcount_block_cache){
+    if(c == s->refcount_block_cache){
         ret = bdrv_pwrite(bs->file, c->entries[i].offset,
                         qcow2_cache_get_table_addr(c, i), c->table_size);
         if (ret < 0) {
             return ret;
         }
-    //}
+    }
     
-    if(false && c == s->l2_table_cache){
+    if(c == s->l2_table_cache){
 
         if(write_cache->entries[i].offset == 0){
             ret = bdrv_pwrite(bs->file, c->entries[i].offset,
@@ -438,7 +438,7 @@ static int qcow2_cache_do_get(BlockDriverState *bs, Qcow2Cache *c,
         // if (t->offset == offset) {
         //     goto found;
         // }
-        if(false && c == s->l2_table_cache){
+        if(c == s->l2_table_cache){
             /* retirer la condition sur l'offset
              * et verifier le remplacement de slice
              */
