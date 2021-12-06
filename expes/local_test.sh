@@ -6,7 +6,7 @@
 #./throughput_ssh.sh ../qemu-hack-direct-access/build disk/chain-100-r/bsnap 1M
 
 ./clear_ram.sh
-cp disk/chain-100-f/snapshot-3 disk/chain-100-f/bsnap
+cp disk/chain-100-f/snapshot-26 disk/chain-100-f/bsnap
 ./throughput_ssh.sh ../qemu-4.2/build disk/chain-100-f/bsnap 1M
 #./launch_rocksdb.sh ../qemu-4.2/build/ disk/chain-100-r/bsnap
 #./rocksdb_footprint.sh ../qemu-4.2/build disk/chain-100-r/bsnap 1792K

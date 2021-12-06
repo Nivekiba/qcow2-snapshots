@@ -273,7 +273,7 @@ static int qcow2_cache_entry_flush(BlockDriverState *bs, Qcow2Cache *c, int i)
                     ||
                     (cond1 && !cond2)
                     ||
-                    l2 == 0
+                    (l2 & L2E_OFFSET_MASK) == 0
                 )
                 {
                     // if(get_external_nb_snapshot_from_incompat(s->incompatible_features) < 10) {

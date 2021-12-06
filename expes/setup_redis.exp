@@ -1,0 +1,37 @@
+#!/usr/bin/expect -f
+
+set qemu_dir    [lindex $argv 0]
+set filename    [lindex $argv 1]
+
+set timeout -1
+
+spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 -nographic --accel kvm -m 4G -drive file=$filename,format=qcow2
+
+
+expect "login: "
+send "root\n"
+
+expect "Password: "
+send "a\n"
+
+expect "# "
+send "dpkg --configure -a && apt --fix-broken install -y && apt-get update -y && apt-get install maven git make pkg-config -y\n"
+
+expect "# "
+send "cd ~ && rm -rf -- ~/YCSB && git clone https://github.com/brianfrankcooper/YCSB.git && cd ~/YCSB && mvn -pl site.ycsb:redis-binding -am clean package && sync\n"
+
+# expect "# "
+# send "cd ~ && rm redis-* -rf && wget https://download.redis.io/releases/redis-6.2.6.tar.gz && tar xzf redis-6.2.6.tar.gz && cd redis-6.2.6 && sync;\n"
+
+# expect "# "
+# send "make -j && sync\n"
+
+# expect "# "
+# send "make -j && sync\n"
+
+
+expect "# "
+send "apt install redis -y\n"
+
+expect "# "
+send "shutdown now\n"

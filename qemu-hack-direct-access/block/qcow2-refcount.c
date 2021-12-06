@@ -1384,6 +1384,11 @@ int qcow2_update_snapshot_refcount(BlockDriverState *bs,
                                                        s->refcount_block_cache);
                         }
                         l2_slice[j] = cpu_to_be64(entry);
+
+                        l2_slice[j] = be64_to_cpu(l2_slice[j]);
+                        set_l2_entry_backing_idx(&l2_slice[j], get_external_nb_snapshot_from_incompat(s->incompatible_features));
+                        l2_slice[j] = cpu_to_be64(l2_slice[j]);
+
                         qcow2_cache_entry_mark_dirty(s->l2_table_cache,
                                                      l2_slice);
                     }
@@ -1685,6 +1690,7 @@ static int check_refcounts_l2(BlockDriverState *bs, BdrvCheckResult *res,
                                            QCOW2_OL_INACTIVE_L2;
 
                         l2_entry = QCOW_OFLAG_ZERO;
+                        set_l2_entry_backing_idx(&l2_entry, get_external_nb_snapshot_from_incompat(s->incompatible_features));
                         l2_table[i] = cpu_to_be64(l2_entry);
                         ret = qcow2_pre_write_overlap_check(bs, ign,
                                 l2e_offset, sizeof(uint64_t), false);
@@ -1939,6 +1945,11 @@ static int check_oflag_copied(BlockDriverState *bs, BdrvCheckResult *res,
                         l2_table[j] = cpu_to_be64(refcount == 1
                                     ? l2_entry |  QCOW_OFLAG_COPIED
                                     : l2_entry & ~QCOW_OFLAG_COPIED);
+
+                        l2_table[j] = be64_to_cpu(l2_table[j]);
+                        set_l2_entry_backing_idx(&l2_table[j], get_external_nb_snapshot_from_incompat(s->incompatible_features));
+                        l2_table[j] = cpu_to_be64(l2_table[j]);
+                        
                         l2_dirty++;
                     }
                 }

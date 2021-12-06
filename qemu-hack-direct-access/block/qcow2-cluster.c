@@ -1671,6 +1671,10 @@ static int discard_in_l2_slice(BlockDriverState *bs, uint64_t offset,
         } else {
             l2_slice[l2_index + i] = cpu_to_be64(0);
         }
+        int j = l2_index + i;
+        l2_slice[j] = be64_to_cpu(l2_slice[j]);
+        set_l2_entry_backing_idx(&l2_slice[j], get_external_nb_snapshot_from_incompat(s->incompatible_features));
+        l2_slice[j] = cpu_to_be64(l2_slice[j]);
 
         /* Then decrease the refcount */
         qcow2_free_any_clusters(bs, old_l2_entry, 1, type);
@@ -1768,6 +1772,10 @@ static int zero_in_l2_slice(BlockDriverState *bs, uint64_t offset,
         } else {
             l2_slice[l2_index + i] |= cpu_to_be64(QCOW_OFLAG_ZERO);
         }
+        int j = l2_index + i;
+        l2_slice[j] = be64_to_cpu(l2_slice[j]);
+        set_l2_entry_backing_idx(&l2_slice[j], get_external_nb_snapshot_from_incompat(s->incompatible_features));
+        l2_slice[j] = cpu_to_be64(l2_slice[j]);
     }
 
     qcow2_cache_put(s->l2_table_cache, (void **) &l2_slice);

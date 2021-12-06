@@ -54,13 +54,13 @@ else
     build_iotests=$PWD
 fi
 
-build_root="$build_iotests/../.."
+build_root="$build_iotests/../../build"
 
 # we need common.env
-if ! . "$build_iotests/common.env"
-then
-    _init_error "failed to source common.env (make sure the qemu-iotests are run from tests/qemu-iotests in the build tree)"
-fi
+#if ! . "$build_iotests/common.env"
+#then
+#    _init_error "failed to source common.env (make sure the qemu-iotests are run from tests/qemu-iotests in the build tree)"
+#fi
 
 # we need common.config
 if ! . "$source_iotests/common.config"
