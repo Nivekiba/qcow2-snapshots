@@ -1,0 +1,30 @@
+#!/usr/bin/expect -f
+
+set qemu_dir    [lindex $argv 0]
+set filename    [lindex $argv 1]
+set workload [lindex $argv 2]
+set cache   [lindex $argv 3]
+set file_config_str [lindex $argv 4]
+
+set timeout -1
+
+spawn $qemu_dir/x86_64-softmmu/qemu-system-x86_64 -smp 4 --accel kvm -m 4G -drive file=$filename,format=qcow2,cache=none,l2-cache-size=$cache -nographic
+
+
+expect "login: "
+send "root\n"
+
+expect "Password: "
+send "a\n"
+
+expect "# "
+send "service redis start; sleep 10\n"
+
+expect "# "
+send "echo \"$file_config_str\" > rocksdb.dat\n"
+
+expect "# "
+send "cd ~/YCSB && ./bin/ycsb run redis -s -P workloads/$workload -P ~/rocksdb.dat && sync\n"
+
+expect "# "
+send "shutdown now\n"
