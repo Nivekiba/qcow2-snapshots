@@ -23,7 +23,7 @@ sudo ./setup_redis.exp $QEMU_CMD_DIR $SNAPSHOTS_DIR/snapshot-1
 i=2
 j=1
 
-recordcount=3000000
+recordcount=1000000
 target=500
 index_current_snap=0
 count_per_snap=$((recordcount/SNAPSHOTS))

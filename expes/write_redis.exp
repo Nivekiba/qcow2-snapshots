@@ -19,19 +19,25 @@ send "a\n"
 # send "cd ~/redis-6.2.6 && src/redis-server & > /dev/null\n"
 
 expect "# "
-send "service redis start; sleep 10\n"
+send "service redis start\n"
+
+# expect "# "
+# send "redis-cli config set stop-writes-on-bgsave-error no\n"
 
 expect "# "
-send "redis-cli config set stop-writes-on-bgsave-error no\n"
+send "sed -i 's/appendonly no/appendonly yes/g' /etc/redis/redis.conf; sed -i 's/save 60 10000/save 10 20000/g' /etc/redis/redis.conf\n"
+
+expect "# "
+send "service redis-server restart\n"
 
 expect "# "
 send "echo \"$file_config_str\" > rocksdb.dat; cat rocksdb.dat\n"
 
 expect "# "
-send "cd ~/YCSB && ./bin/ycsb load redis -s -P workloads/workloada -P ~/rocksdb.dat > outputLoad.txt; cat outputLoad.txt\n"
+send "cd ~/YCSB && ./bin/ycsb load redis -s -P workloads/workloada -P ~/rocksdb.dat && redis-cli FLUSHALL\n"
 
 expect "# "
 send "sync;\n"
 
 expect "# "
-send "shutdown now\n"
+send "echo weooo && shutdown now\n"
