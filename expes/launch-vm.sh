@@ -6,7 +6,7 @@ ROOT=/home/nivek/Workspace/qcow2-snapshots
 QEMU=$ROOT/qemu-hack-direct-access/build/x86_64-softmmu/qemu-system-x86_64
 
 sudo $QEMU -smp 4 -m 4G \
-    -drive format=qcow2,file=disk/ub-18.04_$size.qcow2,cache=writethrough \
+    -drive format=qcow2,file=disk/chain-100-f/snapshot-1,cache=writethrough \
     --accel kvm \
     -nographic \
     -nic user,hostfwd=tcp::10022-:22 \

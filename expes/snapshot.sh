@@ -2,7 +2,7 @@
 
 QEMU_GA_SOCKET=./qemu-ga-socket
 QEMU_MONITOR_SOCKET=./qemu-monitor-socket
-ITERATIONS=350
+ITERATIONS=4
 SLEEP_BETWEEN_ITERATIONS_SEC=1
 # Stream every X iterations, 0 disables streaming
 STREAM=0
@@ -22,7 +22,7 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 fio fio.job &
 REMOTE_FIO_ID=$!
 
-i=0
+i=1
 while true; do
 
 let i="$i+1"

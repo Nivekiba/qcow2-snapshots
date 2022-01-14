@@ -2246,7 +2246,7 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
             do{
                 backing_array[count--] = count_c;
                 count_c = count_c->bs->backing;
-            }while(count!=0);
+            }while(count!=-1);
         }
     }
 
@@ -2277,10 +2277,12 @@ static coroutine_fn int qcow2_co_preadv_task(BlockDriverState *bs,
                 // printf("[A] backing at %d doesn't exists, %p (checkpoint increment %d)\n", ind, backing_array[ind]->bs->file, checkpoint_entry);
             } else {
                 tmp = backing_array[ind];
-                // printf("backing at %d exists: %p\n", ind, backing_array[ind]);
+                // printf("backing at %d exists: %p\n", ind, backing_array[ind]);o
             }
         }
-
+        if(nb_ext == 0){
+            tmp = bs->backing;
+        }
         // nn++;
         // tim += clock() - time;
         assert(bs->backing); /* otherwise handled in qcow2_co_preadv_part */
