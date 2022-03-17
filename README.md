@@ -103,3 +103,5 @@ Questions for Outscale:
   - Frequency of streams? also what model, i.e. whcih snapshot do they merge
     and which they dont?
 --->
+
+Details information about Artifact evaluation are set in [expes directory](./expes)
