@@ -37,7 +37,7 @@ pivot on a new live virtual disk file each time we take a snapshot and even if
 we delete it, it will refuse to create a snapshot with the same name.
 
 ---
-
+<!---
 ## Results
 
 ### Guest bandwith over time
@@ -102,3 +102,4 @@ Questions for Outscale:
   - Frequency of snaphsots?
   - Frequency of streams? also what model, i.e. whcih snapshot do they merge
     and which they dont?
+--->
