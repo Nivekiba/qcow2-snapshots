@@ -1,4 +1,4 @@
-Required packages:
+Required packages run on Ubuntu 18/20 and Debian 10:
 ```
 sudo apt install qemu-system-x86 libguestfs-tools socat gnuplot \
     build-essential gnuplot libpixman-1-dev \
@@ -7,9 +7,9 @@ sudo apt install qemu-system-x86 libguestfs-tools socat gnuplot \
 
 Build qemu:
 ```
-git submodule init
-git submodule update
-cd qemu
+cd qemu-4.2 # for sQemu / cd qemu-4.2-vanilla for vQemu
+mkdir build
+cd build
 ./configure --target-list=x86_64-softmmu --enable-debug-info
 make -j`nproc`
 ```
@@ -24,20 +24,9 @@ Launch the VM:
 ./launch-vm.sh
 ```
 
-Root password is `a`.
-
-To launch the experiment, wait until the VM finishes its boot process then, on
-the host:
-```
-./snapshot.sh
-```
-
-Note that you should relaunch the VM each time you start the experiment as qemu
-pivot on a new live virtual disk file each time we take a snapshot and even if
-we delete it, it will refuse to create a snapshot with the same name.
 
 ---
-
+<!---
 ## Results
 
 ### Guest bandwith over time
@@ -102,3 +91,6 @@ Questions for Outscale:
   - Frequency of snaphsots?
   - Frequency of streams? also what model, i.e. whcih snapshot do they merge
     and which they dont?
+--->
+
+Details information about Artifact evaluation are set in [expes directory](./expes)
