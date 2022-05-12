@@ -1,0 +1,32 @@
+#!/usr/bin/expect -f
+
+set qemu_dir    [lindex $argv 0]
+set filename    [lindex $argv 1]
+set data_size_megas  [lindex $argv 2]
+set filedataname    [lindex $argv 3]
+set data_format [lindex $argv 4]
+
+set timeout -1
+
+spawn qemu-system-x86_64 -smp 4 -nographic --accel kvm -m 4G -drive file=$filename,format=qcow2,cache=none -drive file=$filedataname,format=$data_format
+
+expect "login: "
+send "root\n"
+
+expect "Password: "
+send "a\n"
+
+expect "# "
+send "mkdir -p /mnt/data && mkfs.ext4 /dev/sdb\n"
+
+expect "# "
+send "echo \"/dev/sdb /mnt/data ext4 defaults 0 0\" >> /etc/fstab && sync\n"
+
+expect "# "
+send "tail /etc/fstab\n"
+
+expect "# "
+send "tail /etc/fstab\n"
+
+expect "# "
+send "shutdown -h now\n"
