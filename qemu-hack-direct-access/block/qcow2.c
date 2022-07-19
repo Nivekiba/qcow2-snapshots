@@ -3806,6 +3806,7 @@ qcow2_co_create(BlockdevCreateOptions *create_options, Error **errp)
             }
             
             s->l1_table[i] = l2_offset;
+            printf("%lx\n", l2_offset);
             
             ret = qcow2_write_l1_entry(blk_bs(blk), i);
             // printf("entry l1 writing: %ld\n", l2_offset);
@@ -3828,7 +3829,27 @@ qcow2_co_create(BlockdevCreateOptions *create_options, Error **errp)
                 // if( (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) != 0 )
                 //     printf("before %lx => ", l2_slice[j]);
 
+                // int ar, br, cr;
+                // ar = br = cr = 0;
+                // if(l2_slice[j] & 1ULL)
+                //     cr = 1;
+                // if(l2_slice[j] & 1ULL<<63)
+                //     ar = 1;
+                // if(l2_slice[j] & L2E_OFFSET_MASK)
+                //     br = 1;
+                // printf("%d%d%d\n", ar, br, cr);
+
                 l2_slice[j] =  (l2_slice[j] & ~L2E_OFFSET_MASK);// & ~(1ULL<<63);
+
+                // int ar, br, cr;
+                // ar = br = cr = 0;
+                // if(l2_slice[j] & 1ULL)
+                //     cr = 1;
+                // if(l2_slice[j] & 1ULL<<63)
+                //     ar = 1;
+                // if(l2_slice[j] & L2E_OFFSET_MASK)
+                //     br = 1;
+                // printf("%d%d%d\n", ar, br, cr);
 
                 // if( 
                 //     (l2_slice[j] & L2E_BACKING_FILE_OFFSET_MASK) == 0x1fe

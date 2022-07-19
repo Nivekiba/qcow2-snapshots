@@ -20,21 +20,21 @@ sudo arp -d localhost
 
 bef=`date +%s`
 
-while ! ssh -i keys/id_rsa root@localhost -o StrictHostKeyChecking=no -p 10022 2> /dev/null true; do
+while ! sshpass -p a ssh -i keys/id_rsa root@localhost -o StrictHostKeyChecking=no -p 10022 2> /dev/null true; do
     sleep 30
 done;
 
 let spend="`date +%s` - bef"
 echo "time spend to gain ssh service: "$spend
 
-ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+sshpass -p a ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 'dd if=/dev/sda of=/dev/null bs=1M status=progress && rm -rf ~/.ssh/known_hosts' >& dd
 
 cat dd | tail -1 | cut -d "," -f 4 >> dd_footprint
 
 sudo ./get_wss.sh >> memory_footprint
 
-ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
+sshpass -p a ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 'shutdown now'
 
 wait $QEMU_ID
