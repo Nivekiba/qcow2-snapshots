@@ -20,7 +20,7 @@ expect "# "
 send "echo 3 > /proc/sys/vm/drop_caches\n"
 
 expect "# "
-send "date;dd if=/dev/sda of=/dev/null bs=1M iflag=direct >& /dev/null;date\n"
+send "date;dd if=/dev/sda of=/dev/null bs=1M iflag=direct;date\n"
 
 expect "# "
 send "shutdown -h now\n"
