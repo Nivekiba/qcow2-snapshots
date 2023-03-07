@@ -4,9 +4,10 @@ ROOT=$1
 QEMU_DIR=$2
 QEMU=$ROOT/$QEMU_DIR/build/x86_64-softmmu/qemu-system-x86_64
 file=$3
+filee=`realpath $file`
 
 sudo $QEMU -smp 4 -m 4G \
-    -drive format=qcow2,file=$3 \
+    -drive format=qcow2,file=$filee \
     --accel kvm \
     -nographic \
     -nic user,hostfwd=tcp::10022-:22 \
