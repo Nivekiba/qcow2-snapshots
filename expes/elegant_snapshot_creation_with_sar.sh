@@ -43,11 +43,9 @@ function gen_chain()
 	echo "Start chain of length $length generation with writing of $size_per_snap MB per snap"
 	wait_status launch_sess "root@box:~#"
 	for node in ${nodes[@]}; do
-		tmux new -d "ssh -o StrictHostKeyChecking=no root@$node sar -n DEV -u -db 1 > /users/nivekiba/test"
+		tmux new -d "ssh -o StrictHostKeyChecking=no root@$node sar -n DEV -u -db 1 > /users/nivekiba/sarcreate$node"
 	done
 	tmux new -s gen_sess -d "./snap_with_write.sh $length $size_per_snap $snapd"
-	wait_status gen_sess "End of snapshots creation ===>>"
-	tmux kill-session
 	echo "End of generation"
 }
 

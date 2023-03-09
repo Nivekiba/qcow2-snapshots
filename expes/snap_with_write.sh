@@ -37,3 +37,5 @@ ssh -o "UserKnownHostsFile=/dev/null" -o StrictHostKeyChecking=no \
     -i ./keys/id_rsa root@localhost -p 10022 "shutdown now"
 
 echo "End of snapshots creation ===>>"
+
+tmux kill-server
